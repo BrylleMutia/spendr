@@ -1,11 +1,12 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { apiSlice } from "../api/apiSlice";
+import { configureStore } from "@reduxjs/toolkit";
+import usersReducer from "../features/users/usersSlice";
 
 export const store = configureStore({
   reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    users: usersReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-  // getDefaultMiddleware gets the automatically added middleware on store (thunk, logger)
-    getDefaultMiddleware().concat(apiSlice.middleware),
 });
+
+// types for selector and dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
