@@ -27,7 +27,7 @@ export const fetchUsers = createAsyncThunk<
     const usersRef = collection(firestoreDb, "users");
 
     let querySnapshot = await getDocs(query(usersRef));
-    if(limitNum) {
+    if (limitNum) {
       querySnapshot = await getDocs(query(usersRef, limit(limitNum)));
     }
 
@@ -60,18 +60,19 @@ const usersSlice = createSlice({
       (state, action: PayloadAction<User[]>) => {
         state.users = action.payload;
         state.isLoading = false;
+        state.error = { message: "" };
       },
     );
     builder.addMatcher(isAnyOf(fetchUsers.pending), (state) => {
       state.isLoading = true;
     }),
-    builder.addMatcher(
-      isAnyOf(fetchUsers.rejected),
-      (state, action: PayloadAction<ErrorResponse>) => {
-        state.error = action.payload;
-        state.isLoading = false;
-      },
-    );
+      builder.addMatcher(
+        isAnyOf(fetchUsers.rejected),
+        (state, action: PayloadAction<ErrorResponse>) => {
+          state.error = action.payload;
+          state.isLoading = false;
+        },
+      );
   },
 });
 

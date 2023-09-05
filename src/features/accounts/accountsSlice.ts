@@ -28,7 +28,7 @@ export const fetchAccounts = createAsyncThunk<
     const accountsRef = collection(firestoreDb, "accounts");
 
     let querySnapshot = await getDocs(query(accountsRef));
-    if(limitNum) {
+    if (limitNum) {
       querySnapshot = await getDocs(query(accountsRef, limit(limitNum)));
     }
 
@@ -63,6 +63,7 @@ const accountsSlice = createSlice({
       (state, action: PayloadAction<Account[]>) => {
         state.accounts = action.payload;
         state.isLoading = false;
+        state.error = { message: "" };
       },
     ),
       builder.addMatcher(isAnyOf(fetchAccounts.pending), (state) => {
