@@ -1,13 +1,15 @@
+import { ErrorResponse } from "../users/userTypes";
+
 export type InitialState = {
   accounts: Account[];
   isLoading: boolean;
-  error: string;
+  error: ErrorResponse;
 };
 
 export type Account = {
   id: string;
   dateCreated: string;
-  userid: string;
+  userId: string;
   name: string;
   amount: number;
 };

@@ -1,40 +1,56 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  PayloadAction,
+  createAsyncThunk,
+  createSlice,
+  isAnyOf,
+} from "@reduxjs/toolkit";
 import type { InitialState, Account } from "./accountTypes";
 import { firestoreDb } from "../../api/fireStore";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, limit } from "firebase/firestore";
+import { ErrorResponse } from "../users/userTypes";
 
 const initialState: InitialState = {
   accounts: [],
   isLoading: false,
-  error: ""
+  error: {
+    message: "",
+  },
 };
 
 // query / thunk
-export const fetchAccounts = createAsyncThunk(
-  "accounts/fetchAccounts",
-  async () => {
-    try {
-      const accounts: Account[] = [];
-      const querySnapshot = await getDocs(collection(firestoreDb, "accounts"));
+export const fetchAccounts = createAsyncThunk<
+  Account[],
+  number,
+  { rejectValue: ErrorResponse }
+>("accounts/fetchAccounts", async (limitNum, thunkAPI) => {
+  try {
+    const accounts: Account[] = [];
+    const accountsRef = collection(firestoreDb, "accounts");
 
-      querySnapshot.forEach((doc) => {
-        accounts.push({
-          id: doc.id,
-          userid: doc.data().userid,
-          dateCreated: String(new Date(doc.data().dateCreated.seconds * 1000)),
-          name: doc.data().name,
-          amount: doc.data().amount,
-        });
-      });
-
-      return accounts;
-    } catch (err) {
-      console.error(err);
-      throw err;
-      // TODO: Probably add error to state?
+    let querySnapshot = await getDocs(query(accountsRef));
+    if(limitNum) {
+      querySnapshot = await getDocs(query(accountsRef, limit(limitNum)));
     }
-  },
-);
+
+    querySnapshot.forEach((doc) => {
+      accounts.push({
+        id: doc.id,
+        userId: doc.data().userid,
+        dateCreated: String(new Date(doc.data().dateCreated.seconds * 1000)),
+        name: doc.data().name,
+        amount: doc.data().amount,
+      });
+    });
+
+    return accounts;
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
 
 // accounts slice
 const accountsSlice = createSlice({
@@ -42,12 +58,24 @@ const accountsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchAccounts.fulfilled, (state, action: PayloadAction<Account[]>) => {
-         state.accounts = action.payload;
+    builder.addCase(
+      fetchAccounts.fulfilled,
+      (state, action: PayloadAction<Account[]>) => {
+        state.accounts = action.payload;
+        state.isLoading = false;
       },
-    );
+    ),
+      builder.addMatcher(isAnyOf(fetchAccounts.pending), (state) => {
+        state.isLoading = true;
+      }),
+      builder.addMatcher(
+        isAnyOf(fetchAccounts.rejected),
+        (state, action: PayloadAction<ErrorResponse>) => {
+          state.error = action.payload;
+          state.isLoading = false;
+        },
+      );
   },
 });
-
 
 export default accountsSlice.reducer;

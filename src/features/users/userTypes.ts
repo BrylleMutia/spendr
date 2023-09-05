@@ -6,7 +6,7 @@ export type InitialState = {
 
 export type ErrorResponse = {
   message: string;
-};
+} | undefined;
 
 export type User = {
   id: string;
