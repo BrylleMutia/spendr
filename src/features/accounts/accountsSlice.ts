@@ -18,7 +18,7 @@ const initialState: InitialState = {
 };
 
 // query / thunk
-export const fetchAccounts = createAsyncThunk<
+export const getAllAccounts = createAsyncThunk<
   Account[],
   number,
   { rejectValue: ErrorResponse }
@@ -59,18 +59,18 @@ const accountsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(
-      fetchAccounts.fulfilled,
+      getAllAccounts.fulfilled,
       (state, action: PayloadAction<Account[]>) => {
         state.accounts = action.payload;
         state.isLoading = false;
         state.error = { message: "" };
       },
     ),
-      builder.addMatcher(isAnyOf(fetchAccounts.pending), (state) => {
+      builder.addMatcher(isAnyOf(getAllAccounts.pending), (state) => {
         state.isLoading = true;
       }),
       builder.addMatcher(
-        isAnyOf(fetchAccounts.rejected),
+        isAnyOf(getAllAccounts.rejected),
         (state, action: PayloadAction<ErrorResponse>) => {
           state.error = action.payload;
           state.isLoading = false;

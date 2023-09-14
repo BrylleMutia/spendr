@@ -61,7 +61,7 @@ export const addEntry = createAsyncThunk<Entry | undefined, EntryInput, { reject
   },
 );
 
-export const fetchEntries = createAsyncThunk<
+export const getAllEntries = createAsyncThunk<
   Entry[],
   number,
   { rejectValue: ErrorResponse }
@@ -102,18 +102,18 @@ const entriesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(
-      fetchEntries.fulfilled,
+      getAllEntries.fulfilled,
       (state, action: PayloadAction<Entry[]>) => {
         state.entries = action.payload;
         state.isLoading = false;
         state.error = { message: "" };
       },
     );
-    builder.addMatcher(isAnyOf(fetchEntries.pending), (state) => {
+    builder.addMatcher(isAnyOf(getAllEntries.pending), (state) => {
       state.isLoading = true;
     });
     builder.addMatcher(
-      isAnyOf(fetchEntries.rejected),
+      isAnyOf(getAllEntries.rejected),
       (state, action: PayloadAction<ErrorResponse>) => {
         state.error = action.payload;
         state.isLoading = false;

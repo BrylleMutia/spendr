@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { fetchUsers } from "./usersSlice";
-import { fetchAccounts } from "../accounts/accountsSlice";
+import { getAllUsers } from "./usersSlice";
+import { getAllAccounts } from "../accounts/accountsSlice";
 import { addEntry } from "../entries/entriesSlice";
 
 const UsersPage = () => {
   const users = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
-  
+
   // dispatch(
   //   addEntry({
   //     categoryId: "213jjj",
@@ -17,8 +17,8 @@ const UsersPage = () => {
   // );
 
   useEffect(() => {
-    dispatch(fetchUsers(0));
-    dispatch(fetchAccounts(0));
+    dispatch(getAllUsers(0));
+    dispatch(getAllAccounts(0));
   }, []);
 
   return (

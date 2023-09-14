@@ -17,7 +17,7 @@ const initialState: InitialState = {
 };
 
 // query / thunk
-export const fetchUsers = createAsyncThunk<
+export const getAllUsers = createAsyncThunk<
   User[], // output type
   number, // input type
   { rejectValue: ErrorResponse } // error type
@@ -56,18 +56,18 @@ const usersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(
-      fetchUsers.fulfilled,
+      getAllUsers.fulfilled,
       (state, action: PayloadAction<User[]>) => {
         state.users = action.payload;
         state.isLoading = false;
         state.error = { message: "" };
       },
     );
-    builder.addMatcher(isAnyOf(fetchUsers.pending), (state) => {
+    builder.addMatcher(isAnyOf(getAllUsers.pending), (state) => {
       state.isLoading = true;
     }),
       builder.addMatcher(
-        isAnyOf(fetchUsers.rejected),
+        isAnyOf(getAllUsers.rejected),
         (state, action: PayloadAction<ErrorResponse>) => {
           state.error = action.payload;
           state.isLoading = false;
