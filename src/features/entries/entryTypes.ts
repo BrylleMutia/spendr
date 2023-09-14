@@ -6,11 +6,14 @@ export type InitialState = {
    error: ErrorResponse
 }
 
-export type Entry = {
+export type Entry = EntryInput & {
    id: string;
-   categoryId: string;
    dateCreated: string;
+}
+
+export type EntryInput = {
+   categoryId: string
    accountId: string;
-   note: string;
+   note?: string;
    amount: number;
 }

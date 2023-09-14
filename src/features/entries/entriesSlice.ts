@@ -4,9 +4,18 @@ import {
   createSlice,
   isAnyOf,
 } from "@reduxjs/toolkit";
-import { Entry, InitialState } from "./entryTypes";
+import { Entry, EntryInput, InitialState } from "./entryTypes";
 import { ErrorResponse } from "../users/userTypes";
-import { collection, getDocs, limit, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  Timestamp,
+  limit,
+  query,
+} from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
 
 const initialState: InitialState = {
@@ -18,10 +27,41 @@ const initialState: InitialState = {
 };
 
 // thunk
-// TODO: ADD ENTRIES USING ADDDOC! (not manual)
+export const addEntry = createAsyncThunk<Entry | undefined, EntryInput, { rejectValue: ErrorResponse }>(
+  "entries/addEntry",
+  async (entryData, thunkAPI) => {
+    try {
+      // add document
+      const entriesRef = collection(firestoreDb, "entries");
+      const querySnapshot = await addDoc(entriesRef, { dateCreated: Timestamp.fromDate(new Date()), ...entryData });
 
+      if (querySnapshot.id) {
+        // get document details
+        const docRef = doc(firestoreDb, "entries", querySnapshot.id);
+        const docSnap = await getDoc(docRef);
 
-const fetchEntries = createAsyncThunk<
+        if (docSnap.exists()) {
+          return {
+            id: docSnap.id,
+            categoryId: docSnap.data().categoryId,
+            dateCreated: docSnap.data().dateCreated,
+            accountId: docSnap.data().accountId,
+            note: docSnap.data().note,
+            amount: docSnap.data().amount,
+          };
+        }
+      }
+    } catch (err) {
+      if (!err) {
+        throw err;
+      }
+
+      return thunkAPI.rejectWithValue({ message: err as string });
+    }
+  },
+);
+
+export const fetchEntries = createAsyncThunk<
   Entry[],
   number,
   { rejectValue: ErrorResponse }
