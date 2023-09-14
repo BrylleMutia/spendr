@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getAllUsers } from "./usersSlice";
 import { getAllAccounts } from "../accounts/accountsSlice";
+import { getAllCategories } from "../categories/categoriesSlice";
 import { addEntry } from "../entries/entriesSlice";
 
 const UsersPage = () => {
@@ -19,6 +20,7 @@ const UsersPage = () => {
   useEffect(() => {
     dispatch(getAllUsers(0));
     dispatch(getAllAccounts(0));
+    dispatch(getAllCategories(0))
   }, []);
 
   return (

@@ -65,7 +65,7 @@ export const getAllEntries = createAsyncThunk<
   Entry[],
   number,
   { rejectValue: ErrorResponse }
->("entries/fetchEntries", async (limitNum, thunkAPI) => {
+>("entries/getAllEntries", async (limitNum, thunkAPI) => {
   try {
     const entries: Entry[] = [];
     const entriesRef = collection(firestoreDb, "entries");

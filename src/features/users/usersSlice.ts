@@ -21,15 +21,15 @@ export const getAllUsers = createAsyncThunk<
   User[], // output type
   number, // input type
   { rejectValue: ErrorResponse } // error type
->("users/fetchUsers", async (limitNum, thunkAPI) => {
+>("users/getAllUsers", async (limitNum, thunkAPI) => {
   try {
     const users: User[] = [];
     const usersRef = collection(firestoreDb, "users");
 
-    let querySnapshot = await getDocs(query(usersRef));
+    let querySnapshot;
     if (limitNum) {
       querySnapshot = await getDocs(query(usersRef, limit(limitNum)));
-    }
+    } else querySnapshot = await getDocs(query(usersRef));
 
     querySnapshot.forEach((doc) => {
       users.push({

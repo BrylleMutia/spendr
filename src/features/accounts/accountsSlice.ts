@@ -22,7 +22,7 @@ export const getAllAccounts = createAsyncThunk<
   Account[],
   number,
   { rejectValue: ErrorResponse }
->("accounts/fetchAccounts", async (limitNum, thunkAPI) => {
+>("accounts/getAllAccounts", async (limitNum, thunkAPI) => {
   try {
     const accounts: Account[] = [];
     const accountsRef = collection(firestoreDb, "accounts");
