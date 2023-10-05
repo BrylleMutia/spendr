@@ -27,39 +27,39 @@ const initialState: InitialState = {
 };
 
 // thunk
-export const addEntry = createAsyncThunk<Entry | undefined, EntryInput, { rejectValue: ErrorResponse }>(
-  "entries/addEntry",
-  async (entryData, thunkAPI) => {
-    try {
-      // add document
-      const entriesRef = collection(firestoreDb, "entries");
-      const querySnapshot = await addDoc(entriesRef, { dateCreated: Timestamp.fromDate(new Date()), ...entryData });
-
-      if (querySnapshot.id) {
-        // get document details
-        const docRef = doc(firestoreDb, "entries", querySnapshot.id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
+export const addEntry = createAsyncThunk<
+  Entry | undefined,
+  EntryInput,
+  { rejectValue: ErrorResponse }
+>("entries/addEntry", async (entryData, thunkAPI) => {
+  try {
+    // add document
+    const entriesRef = collection(firestoreDb, "entries");
+    await addDoc(entriesRef, {
+      dateCreated: Timestamp.fromDate(new Date()),
+      ...entryData,
+    }).then((docRef) => {
+      getDoc(docRef).then((doc) => {
+        if (doc.exists()) {
           return {
-            id: docSnap.id,
-            categoryId: docSnap.data().categoryId,
-            dateCreated: docSnap.data().dateCreated,
-            accountId: docSnap.data().accountId,
-            note: docSnap.data().note,
-            amount: docSnap.data().amount,
+            id: doc.id,
+            categoryId: doc.data().categoryId,
+            dateCreated: doc.data().dateCreated,
+            accountId: doc.data().accountId,
+            note: doc.data().note,
+            amount: doc.data().amount,
           };
         }
-      }
-    } catch (err) {
-      if (!err) {
-        throw err;
-      }
-
-      return thunkAPI.rejectWithValue({ message: err as string });
+      });
+    });
+  } catch (err) {
+    if (!err) {
+      throw err;
     }
-  },
-);
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
 
 export const getAllEntries = createAsyncThunk<
   Entry[],
