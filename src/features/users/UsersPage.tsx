@@ -2,25 +2,24 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getAllUsers } from "./usersSlice";
 import { getAllAccounts } from "../accounts/accountsSlice";
-import { getAllCategories } from "../categories/categoriesSlice";
+import {
+  getAllCategories,
+  addNewCategory,
+} from "../categories/categoriesSlice";
 import { addEntry } from "../entries/entriesSlice";
 
 const UsersPage = () => {
   const users = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
 
-  // dispatch(
-  //   addEntry({
-  //     categoryId: "213jjj",
-  //     accountId: "1234jj",
-  //     amount: 7709,
-  //   }),
-  // );
+  const triggerAction = () => {
+    dispatch(addNewCategory({ name: "Groceries111", userId: "123144" }));
+  };
 
   useEffect(() => {
     dispatch(getAllUsers(0));
     dispatch(getAllAccounts(0));
-    dispatch(getAllCategories(0))
+    dispatch(getAllCategories(0));
   }, []);
 
   return (
@@ -32,6 +31,10 @@ const UsersPage = () => {
           <p>Date Created: {user.dateCreated}</p>
         </div>
       ))}
+
+      <button onClick={triggerAction} style={{ background: "skyblue" }}>
+        Trigger action
+      </button>
     </div>
   );
 };
