@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getAllUsers } from "./usersSlice";
-import { getAllAccounts } from "../accounts/accountsSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { getAllUsers } from "../features/users/usersSlice";
+import { getAllAccounts } from "../features/accounts/accountsSlice";
 import {
   getAllCategories,
   addNewCategory,
-} from "../categories/categoriesSlice";
-import { addEntry } from "../entries/entriesSlice";
+} from "../features/categories/categoriesSlice";
+import { addEntry } from "../features/entries/entriesSlice";
 
 const UsersPage = () => {
   const users = useAppSelector((state) => state.users);
