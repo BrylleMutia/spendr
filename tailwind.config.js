@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -16,6 +18,7 @@ export default {
 
       // TODO: CHANGE FONT FAMILY CONFIG TO INTER!!
       fontFamily: {
+        sans: ['"Inter"', ...defaultTheme.fontFamily.sans], // change default font to Inter
         inter: ["Inter", "Arial", "sans-serif"],
       },
     },
