@@ -39,8 +39,10 @@ const HomepageContainer = () => {
           </p>
         </div>
 
-        <div className="mt-3 flex flex-wrap gap-[0.6em]">
-          <WalletGauge />
+            {/* TODO: Structure needed data on backend */}
+        <div className="mt-3 flex flex-row flex-wrap gap-[0.6em]">
+          <WalletGauge label="Balance" value={60} />
+          <WalletGauge label="Cash-flow" value={-20} />
         </div>
       </Card>
     </main>
