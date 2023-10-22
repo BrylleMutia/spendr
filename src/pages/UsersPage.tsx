@@ -13,14 +13,14 @@ const UsersPage = () => {
   const dispatch = useAppDispatch();
 
   const triggerAction = () => {
-    dispatch(addNewCategory({ name: "Groceries111", userId: "123144" }));
+    dispatch(addEntry({ accountId: "2366435", amount: 1000, categoryId: "6632422", purpose: "income" }));
   };
 
-  useEffect(() => {
-    dispatch(getAllUsers(0));
-    dispatch(getAllAccounts(0));
-    dispatch(getAllCategories(0));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getAllUsers(0));
+  //   dispatch(getAllAccounts(0));
+  //   dispatch(getAllCategories(0));
+  // }, []);
 
   return (
     <div>

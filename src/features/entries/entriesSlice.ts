@@ -17,6 +17,7 @@ import {
   query,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
+import dateConverter from "../../utils/dateConverter";
 
 const initialState: InitialState = {
   entries: [],
@@ -35,23 +36,28 @@ export const addEntry = createAsyncThunk<
   try {
     // add document
     const entriesRef = collection(firestoreDb, "entries");
-    await addDoc(entriesRef, {
+    const newAddedEntry = await addDoc(entriesRef, {
       dateCreated: Timestamp.fromDate(new Date()),
       ...entryData,
     }).then((docRef) => {
-      getDoc(docRef).then((doc) => {
+      return getDoc(docRef).then((doc) => {
         if (doc.exists()) {
+          console.log("Add entry triggered!", doc.data());
+
           return {
             id: doc.id,
             categoryId: doc.data().categoryId,
-            dateCreated: doc.data().dateCreated,
+            dateCreated: dateConverter(doc.data().dateCreated.seconds),
             accountId: doc.data().accountId,
             note: doc.data().note,
             amount: doc.data().amount,
+            purpose: doc.data().purpose,
           };
         }
       });
     });
+
+    return newAddedEntry;
   } catch (err) {
     if (!err) {
       throw err;
@@ -77,11 +83,12 @@ export const getAllEntries = createAsyncThunk<
     querySnapshot.forEach((doc) => {
       entries.push({
         id: doc.id,
-        dateCreated: doc.data().dateCreated,
+        dateCreated: dateConverter(doc.data().dateCreated.seconds),
         accountId: doc.data().accountid,
         categoryId: doc.data().categoryid,
         note: doc.data().note,
         amount: doc.data().amount,
+        purpose: doc.data().purpose,
       });
     });
 
@@ -107,6 +114,16 @@ const entriesSlice = createSlice({
         state.entries = action.payload;
         state.isLoading = false;
         state.error = { message: "" };
+      },
+    );
+    builder.addCase(
+      addEntry.fulfilled,
+      (state, action: PayloadAction<Entry | undefined>) => {
+        if (action.payload) {
+          state.entries = [action.payload, ...state.entries];
+          state.isLoading = false;
+          state.error = { message: "" };
+        }
       },
     );
     builder.addMatcher(isAnyOf(getAllEntries.pending), (state) => {

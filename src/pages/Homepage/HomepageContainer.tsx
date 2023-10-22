@@ -5,6 +5,7 @@ import { IoMdSettings } from "react-icons/io";
 import Account from "./components/Account";
 import AddAccount from "./components/AddAccount";
 import WalletGauge from "./components/WalletGauge";
+import UsersPage from "../UsersPage";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
@@ -45,6 +46,8 @@ const HomepageContainer = () => {
           <WalletGauge label="Cash-flow" value={-20} />
         </div>
       </Card>
+
+      <UsersPage />
     </main>
   );
 };
