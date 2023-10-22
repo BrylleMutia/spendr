@@ -11,9 +11,12 @@ export type Entry = EntryInput & {
    dateCreated: string;
 }
 
+type Purpose = "income" | "expense"
+
 export type EntryInput = {
    categoryId: string
    accountId: string;
    note?: string;
    amount: number;
+   purpose: Purpose;
 }
