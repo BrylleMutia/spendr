@@ -21,6 +21,11 @@ import dateConverter from "../../utils/dateConverter";
 
 const initialState: InitialState = {
   entries: [],
+  totals: {
+    expense: 0,
+    income: 0,
+    cashflow: 0,
+  },
   isLoading: false,
   error: {
     message: "",
@@ -112,6 +117,34 @@ const entriesSlice = createSlice({
       getAllEntries.fulfilled,
       (state, action: PayloadAction<Entry[]>) => {
         state.entries = action.payload;
+
+        // calculate for totals (expense, income, and cashflow)
+        state.totals.expense = action.payload.reduce((sum, current) => {
+          if (current.purpose === "expense") {
+            return sum - current.amount;
+          } else {
+            return sum;
+          }
+        }, 0);
+
+        state.totals.income = action.payload.reduce((sum, current) => {
+          if (current.purpose === "income") {
+            return sum + current.amount;
+          } else {
+            return sum;
+          }
+        }, 0);
+
+        state.totals.cashflow = action.payload.reduce((sum, current) => {
+          if (current.purpose === "expense") {
+            return sum - current.amount;
+          } else if (current.purpose === "income") {
+            return sum + current.amount;
+          } else {
+            return sum;
+          }
+        }, 0);
+
         state.isLoading = false;
         state.error = { message: "" };
       },

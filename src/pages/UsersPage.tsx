@@ -6,21 +6,29 @@ import {
   getAllCategories,
   addNewCategory,
 } from "../features/categories/categoriesSlice";
-import { addEntry } from "../features/entries/entriesSlice";
+import { addEntry, getAllEntries } from "../features/entries/entriesSlice";
 
 const UsersPage = () => {
   const users = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
 
   const triggerAction = () => {
-    dispatch(addEntry({ accountId: "2366435", amount: 1000, categoryId: "6632422", purpose: "income" }));
+    dispatch(
+      addEntry({
+        accountId: "2366435",
+        amount: 1000,
+        categoryId: "6632422",
+        purpose: "income",
+      }),
+    );
   };
 
-  // useEffect(() => {
-  //   dispatch(getAllUsers(0));
-  //   dispatch(getAllAccounts(0));
-  //   dispatch(getAllCategories(0));
-  // }, []);
+  useEffect(() => {
+    //   dispatch(getAllUsers(0));
+    //   dispatch(getAllAccounts(0));
+    //   dispatch(getAllCategories(0));
+    dispatch(getAllEntries(0));
+  }, []);
 
   return (
     <div>
