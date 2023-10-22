@@ -16,6 +16,7 @@ import {
   query,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
+import dateConverter from "../../utils/dateConverter";
 
 const initialState: InitialState = {
   categories: [],
@@ -46,9 +47,7 @@ export const addNewCategory = createAsyncThunk<
             id: doc.id,
             name: doc.data().name,
             userId: doc.data().userid,
-            dateCreated: String(
-              new Date(doc.data().dateCreated.seconds * 1000),
-            ), // convert timestamp from firebase to date
+            dateCreated: dateConverter(doc.data().dateCreated.seconds), // convert timestamp from firebase to date
           };
         }
       });
@@ -82,7 +81,7 @@ export const getAllCategories = createAsyncThunk<
           id: doc.id,
           name: doc.data().name,
           userId: doc.data().userId,
-          dateCreated: String(new Date(doc.data().dateCreated.seconds * 1000)), // convert timestamp from firebase to date
+          dateCreated: dateConverter(doc.data().dateCreated.seconds), // convert timestamp from firebase to date
         });
       }
     });

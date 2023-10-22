@@ -7,6 +7,7 @@ import {
 import type { InitialState, User, ErrorResponse } from "./userTypes";
 import { firestoreDb } from "../../api/fireStore";
 import { collection, getDocs, limit, query } from "firebase/firestore";
+import dateConverter from "../../utils/dateConverter";
 
 const initialState: InitialState = {
   users: [],
@@ -35,7 +36,7 @@ export const getAllUsers = createAsyncThunk<
       users.push({
         id: doc.id,
         name: doc.data().name,
-        dateCreated: String(new Date(doc.data().dateCreated.seconds * 1000)), // convert timestamp from firebase to date
+        dateCreated: dateConverter(doc.data().dateCreated.seconds), // convert timestamp from firebase to date
       });
     });
 

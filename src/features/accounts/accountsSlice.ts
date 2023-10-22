@@ -8,6 +8,7 @@ import type { InitialState, Account } from "./accountTypes";
 import { firestoreDb } from "../../api/fireStore";
 import { collection, getDocs, query, limit } from "firebase/firestore";
 import { ErrorResponse } from "../users/userTypes";
+import dateConverter from "../../utils/dateConverter";
 
 const initialState: InitialState = {
   accounts: [],
@@ -36,7 +37,7 @@ export const getAllAccounts = createAsyncThunk<
       accounts.push({
         id: doc.id,
         userId: doc.data().userid,
-        dateCreated: String(new Date(doc.data().dateCreated.seconds * 1000)),
+        dateCreated: dateConverter(doc.data().dateCreated.seconds),
         name: doc.data().name,
         amount: doc.data().amount,
       });
