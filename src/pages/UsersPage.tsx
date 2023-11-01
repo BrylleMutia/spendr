@@ -16,9 +16,9 @@ const UsersPage = () => {
     dispatch(
       addEntry({
         accountId: "2366435",
-        amount: 1000,
+        amount: 600,
         categoryId: "6632422",
-        purpose: "income",
+        purpose: "expense",
       }),
     );
   };

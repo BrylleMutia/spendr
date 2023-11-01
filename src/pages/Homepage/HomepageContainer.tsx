@@ -9,6 +9,10 @@ import UsersPage from "../UsersPage";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
+  const totals = useAppSelector((state) => state.entries.totals);
+
+  const cashflowCompPercentage =
+    (totals.cashflowCurr / totals.cashflowPrev) * 100;
 
   return (
     <main>
@@ -36,14 +40,13 @@ const HomepageContainer = () => {
         <div>
           <h3 className="text-sm font-bold">Wallet Dashboard</h3>
           <p className="text-gra text-xs">
-            Past 30 days performance, and outlook for next 7 days.
+            Current month vs. previous month statistics report
           </p>
         </div>
 
-            {/* TODO: Structure needed data on backend */}
+        {/* TODO: Structure needed data on backend */}
         <div className="mt-3 flex flex-row flex-wrap gap-[0.6em]">
-          <WalletGauge label="Balance" value={60} />
-          <WalletGauge label="Cash-flow" value={-20} />
+          <WalletGauge label="Cash-flow %" value={cashflowCompPercentage} />
         </div>
       </Card>
 

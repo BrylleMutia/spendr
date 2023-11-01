@@ -17,14 +17,18 @@ import {
   query,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
-import dateConverter from "../../utils/dateConverter";
+import dateConverter, {
+  currentDateMonthYear,
+  dateConvertMonthYear,
+} from "../../utils/dateConverter";
 
 const initialState: InitialState = {
   entries: [],
   totals: {
     expense: 0,
     income: 0,
-    cashflow: 0,
+    cashflowCurr: 0,
+    cashflowPrev: 0,
   },
   isLoading: false,
   error: {
@@ -135,14 +139,35 @@ const entriesSlice = createSlice({
           }
         }, 0);
 
-        state.totals.cashflow = action.payload.reduce((sum, current) => {
-          if (current.purpose === "expense") {
-            return sum - current.amount;
-          } else if (current.purpose === "income") {
-            return sum + current.amount;
-          } else {
-            return sum;
-          }
+        // cashflow current month
+        state.totals.cashflowCurr = action.payload.reduce((sum, current) => {
+          if (
+            dateConvertMonthYear(current.dateCreated) === currentDateMonthYear()
+          ) {
+            if (current.purpose === "expense") {
+              return sum - current.amount;
+            } else if (current.purpose === "income") {
+              return sum + current.amount;
+            } else {
+              return sum;
+            }
+          } else return sum;
+        }, 0);
+
+        // cashflow previous month
+        state.totals.cashflowPrev = action.payload.reduce((sum, current) => {
+          if (
+            dateConvertMonthYear(current.dateCreated) ===
+            currentDateMonthYear(1)
+          ) {
+            if (current.purpose === "expense") {
+              return sum - current.amount;
+            } else if (current.purpose === "income") {
+              return sum + current.amount;
+            } else {
+              return sum;
+            }
+          } else return sum;
         }, 0);
 
         state.isLoading = false;

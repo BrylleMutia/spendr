@@ -7,7 +7,8 @@ export type InitialState = {
    totals: {
       expense: number;
       income: number;
-      cashflow: number;
+      cashflowCurr: number;
+      cashflowPrev: number;
    }
 }
 
