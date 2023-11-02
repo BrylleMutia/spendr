@@ -6,14 +6,15 @@ type WalletGaugeProps = {
   value: number;
 };
 
-const WalletGauge = ({ label, value }: WalletGaugeProps) => {
+const WalletGauge = ({ label, value = 0 }: WalletGaugeProps) => {
   return (
     <article>
       <GaugeComponent
         id="gauge-chart1"
-        value={value}
+        value={Math.ceil(value * 10) / 10} // only get first decimal place
         type="radial"
         minValue={-50}
+        // style={{ width: "50%" }}
         labels={{
           valueLabel: {
             style: {

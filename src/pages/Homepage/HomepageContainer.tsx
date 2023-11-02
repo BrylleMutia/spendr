@@ -44,7 +44,7 @@ const HomepageContainer = () => {
           </p>
         </div>
 
-        {/* TODO: Structure needed data on backend */}
+        {/* TODO: Need line bars to display income expense balance vs prev month */}
         <div className="mt-3 flex flex-row flex-wrap gap-[0.6em]">
           <WalletGauge label="Cash-flow %" value={cashflowCompPercentage} />
         </div>
