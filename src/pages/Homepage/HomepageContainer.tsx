@@ -7,6 +7,7 @@ import AddAccount from "./components/AddAccount";
 import WalletGauge from "./components/WalletGauge";
 import UsersPage from "../UsersPage";
 import LineBarComparison from "./components/LineBarComparison";
+import ComparisonLegend from "./components/ComparisonLegend";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
@@ -49,12 +50,11 @@ const HomepageContainer = () => {
           </p>
         </div>
 
-        {/* TODO: Need line bars to display income expense balance vs prev month */}
-        <div className="mt-3 flex flex-row flex-wrap gap-[0.6em]">
+        <aside className="mt-3 flex flex-row flex-wrap gap-[0.6em]">
           <WalletGauge label="Cash-flow %" value={cashflowCompPercentage} />
-        </div>
+        </aside>
 
-        <div className="mb-5 mt-8">
+        <aside className="mb-5 mt-8">
           <LineBarComparison
             header="Expense"
             compPercentage={expenseCompPercentage}
@@ -63,7 +63,11 @@ const HomepageContainer = () => {
             header="Income"
             compPercentage={incomeCompPercentage}
           />
-        </div>
+
+          <div className="my-5">
+            <ComparisonLegend />
+          </div>
+        </aside>
       </Card>
 
       <UsersPage />
