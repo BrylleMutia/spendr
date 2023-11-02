@@ -25,10 +25,16 @@ import dateConverter, {
 const initialState: InitialState = {
   entries: [],
   totals: {
-    expense: 0,
-    income: 0,
-    cashflowCurr: 0,
-    cashflowPrev: 0,
+    prev: {
+      expense: 0,
+      income: 0,
+      cashflow: 0,
+    },
+    current: {
+      expense: 0,
+      income: 0,
+      cashflow: 0,
+    },
   },
   isLoading: false,
   error: {
@@ -122,31 +128,24 @@ const entriesSlice = createSlice({
       (state, action: PayloadAction<Entry[]>) => {
         state.entries = action.payload;
 
-        // calculate for totals (expense, income, and cashflow)
-        state.totals.expense = action.payload.reduce((sum, current) => {
-          if (current.purpose === "expense") {
-            return sum - current.amount;
-          } else {
-            return sum;
-          }
-        }, 0);
-
-        state.totals.income = action.payload.reduce((sum, current) => {
-          if (current.purpose === "income") {
-            return sum + current.amount;
-          } else {
-            return sum;
-          }
-        }, 0);
-
-        // cashflow current month
-        state.totals.cashflowCurr = action.payload.reduce((sum, current) => {
+        // calculate for current month totals (expense, income, and cashflow)
+        state.totals.current.expense = action.payload.reduce((sum, current) => {
           if (
             dateConvertMonthYear(current.dateCreated) === currentDateMonthYear()
           ) {
             if (current.purpose === "expense") {
               return sum - current.amount;
-            } else if (current.purpose === "income") {
+            } else {
+              return sum;
+            }
+          } else return sum;
+        }, 0);
+
+        state.totals.current.income = action.payload.reduce((sum, current) => {
+          if (
+            dateConvertMonthYear(current.dateCreated) === currentDateMonthYear()
+          ) {
+            if (current.purpose === "income") {
               return sum + current.amount;
             } else {
               return sum;
@@ -154,8 +153,52 @@ const entriesSlice = createSlice({
           } else return sum;
         }, 0);
 
-        // cashflow previous month
-        state.totals.cashflowPrev = action.payload.reduce((sum, current) => {
+        state.totals.current.cashflow = action.payload.reduce(
+          (sum, current) => {
+            if (
+              dateConvertMonthYear(current.dateCreated) ===
+              currentDateMonthYear()
+            ) {
+              if (current.purpose === "expense") {
+                return sum - current.amount;
+              } else if (current.purpose === "income") {
+                return sum + current.amount;
+              } else {
+                return sum;
+              }
+            } else return sum;
+          },
+          0,
+        );
+
+        // previous month totals
+        state.totals.prev.expense = action.payload.reduce((sum, current) => {
+          if (
+            dateConvertMonthYear(current.dateCreated) ===
+            currentDateMonthYear(1)
+          ) {
+            if (current.purpose === "expense") {
+              return sum - current.amount;
+            } else {
+              return sum;
+            }
+          } else return sum;
+        }, 0);
+
+        state.totals.prev.income = action.payload.reduce((sum, current) => {
+          if (
+            dateConvertMonthYear(current.dateCreated) ===
+            currentDateMonthYear(1)
+          ) {
+            if (current.purpose === "income") {
+              return sum + current.amount;
+            } else {
+              return sum;
+            }
+          } else return sum;
+        }, 0);
+
+        state.totals.prev.cashflow = action.payload.reduce((sum, current) => {
           if (
             dateConvertMonthYear(current.dateCreated) ===
             currentDateMonthYear(1)

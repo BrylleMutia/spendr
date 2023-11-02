@@ -12,7 +12,7 @@ const HomepageContainer = () => {
   const totals = useAppSelector((state) => state.entries.totals);
 
   const cashflowCompPercentage =
-    (totals.cashflowCurr / totals.cashflowPrev) * 100;
+    (totals.current.cashflow / totals.prev.cashflow) * 100;
 
   return (
     <main>
@@ -47,6 +47,12 @@ const HomepageContainer = () => {
         {/* TODO: Need line bars to display income expense balance vs prev month */}
         <div className="mt-3 flex flex-row flex-wrap gap-[0.6em]">
           <WalletGauge label="Cash-flow %" value={cashflowCompPercentage} />
+        </div>
+
+        <div>
+          EXPENSE
+
+
         </div>
       </Card>
 
