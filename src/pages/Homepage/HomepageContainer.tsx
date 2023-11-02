@@ -6,6 +6,7 @@ import Account from "./components/Account";
 import AddAccount from "./components/AddAccount";
 import WalletGauge from "./components/WalletGauge";
 import UsersPage from "../UsersPage";
+import LineBarComparison from "./components/LineBarComparison";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
@@ -13,6 +14,10 @@ const HomepageContainer = () => {
 
   const cashflowCompPercentage =
     (totals.current.cashflow / totals.prev.cashflow) * 100;
+  const expenseCompPercentage =
+    (totals.current.expense / totals.prev.expense) * 100;
+  const incomeCompPercentage =
+    (totals.current.income / totals.prev.income) * 100;
 
   return (
     <main>
@@ -49,10 +54,15 @@ const HomepageContainer = () => {
           <WalletGauge label="Cash-flow %" value={cashflowCompPercentage} />
         </div>
 
-        <div>
-          EXPENSE
-
-
+        <div className="mb-5 mt-8">
+          <LineBarComparison
+            header="Expense"
+            compPercentage={expenseCompPercentage}
+          />
+          <LineBarComparison
+            header="Income"
+            compPercentage={incomeCompPercentage}
+          />
         </div>
       </Card>
 

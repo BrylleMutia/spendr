@@ -14,6 +14,9 @@ export default {
         "gray-background": "#DADADA",
         "gray-account": "#858585",
         "white-primary": "#F6F1F1",
+        "prev-month": "#82ca9d",
+        "positive": "#5BE12C",
+        "negative": "#EA4228"
       },
 
       // TODO: CHANGE FONT FAMILY CONFIG TO INTER!!

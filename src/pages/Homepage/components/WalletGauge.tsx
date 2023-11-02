@@ -39,7 +39,7 @@ const WalletGauge = ({ label, value = 0 }: WalletGaugeProps) => {
           animationDelay: 0,
         }}
       />
-      <h3 className="text-center">{label}</h3>
+      <h3 className="text-center text-sm font-light">{label}</h3>
     </article>
   );
 };
