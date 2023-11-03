@@ -8,14 +8,23 @@ const dateConvertMonthYear = (dateConvert: string) => {
   return datemmyyyy;
 };
 
-const currentDateMonthYear = (monthModifier: number = 0) => {
-   const newDate = new Date();
-   const datemmyyyy = `${
-      newDate.getMonth() - monthModifier
-   }/${newDate.getFullYear()}`;
-   
+const dateConvertFullMonthYear = (dateConvert: string) => {
+  const newDate = new Date(dateConvert);
+  const datemmyyyy = `${newDate.toLocaleString("default", {
+    month: "long",
+  })} ${newDate.getFullYear()}`;
+
   return datemmyyyy;
 };
 
-export { dateConvertMonthYear, currentDateMonthYear };
+const currentDateMonthYear = (monthModifier: number = 0) => {
+  const newDate = new Date();
+  const datemmyyyy = `${
+    newDate.getMonth() - monthModifier
+  }/${newDate.getFullYear()}`;
+
+  return datemmyyyy;
+};
+
+export { dateConvertMonthYear, currentDateMonthYear, dateConvertFullMonthYear };
 export default dateConverter;
