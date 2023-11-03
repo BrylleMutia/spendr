@@ -1,4 +1,4 @@
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 
 import Card from "../../components/Card";
 import { IoMdSettings } from "react-icons/io";
@@ -8,10 +8,13 @@ import WalletGauge from "./components/WalletGauge";
 import UsersPage from "../UsersPage";
 import LineBarComparison from "./components/LineBarComparison";
 import ComparisonLegend from "./components/ComparisonLegend";
+import ArrowSelector from "./components/ArrowSelector";
+import { updateMonthInView } from "../../features/entries/entriesSlice";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
   const totals = useAppSelector((state) => state.entries.totals);
+  const monthInView = useAppSelector((state) => state.entries.monthInView);
 
   const cashflowCompPercentage =
     (totals.current.cashflow / totals.prev.cashflow) * 100;
@@ -19,6 +22,11 @@ const HomepageContainer = () => {
     (totals.current.expense / totals.prev.expense) * 100;
   const incomeCompPercentage =
     (totals.current.income / totals.prev.income) * 100;
+
+  const dispatch = useAppDispatch();
+
+  const updateMonthInViewHandler = (modifier: number) =>
+    dispatch(updateMonthInView(modifier));
 
   return (
     <main>
@@ -69,6 +77,11 @@ const HomepageContainer = () => {
           </div>
         </aside>
       </Card>
+
+      <ArrowSelector
+        text={monthInView}
+        actionHandler={updateMonthInViewHandler}
+      />
 
       <UsersPage />
     </main>

@@ -21,6 +21,7 @@ import dateConverter, {
   currentDateMonthYear,
   dateConvertMonthYear,
 } from "../../utils/dateConverter";
+import moment from "moment";
 
 const initialState: InitialState = {
   entries: [],
@@ -36,6 +37,7 @@ const initialState: InitialState = {
       cashflow: 0,
     },
   },
+  monthInView: "",
   isLoading: false,
   error: {
     message: "",
@@ -121,7 +123,13 @@ export const getAllEntries = createAsyncThunk<
 const entriesSlice = createSlice({
   name: "entries",
   initialState,
-  reducers: {},
+  reducers: {
+    updateMonthInView: (state, action: PayloadAction<number>) => {
+      state.monthInView = moment(state.monthInView, "MMMM YYYY")
+        .add(action.payload, "M")
+        .format("MMMM YYYY");
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(
       getAllEntries.fulfilled,
@@ -213,6 +221,13 @@ const entriesSlice = createSlice({
           } else return sum;
         }, 0);
 
+        // get latest month to display in mmmm yyyy format
+        state.monthInView = moment(
+          action.payload.sort((a, b) =>
+            a.dateCreated > b.dateCreated ? -1 : 1,
+          )[0].dateCreated,
+        ).format("MMMM YYYY");
+
         state.isLoading = false;
         state.error = { message: "" };
       },
@@ -240,4 +255,5 @@ const entriesSlice = createSlice({
   },
 });
 
+export const { updateMonthInView } = entriesSlice.actions;
 export default entriesSlice.reducer;

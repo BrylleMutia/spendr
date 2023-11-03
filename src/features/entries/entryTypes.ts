@@ -8,6 +8,7 @@ export type InitialState = {
     prev: Totals;
     current: Totals;
   };
+  monthInView: string;
 };
 
 export type Totals = {
