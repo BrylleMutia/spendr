@@ -10,11 +10,14 @@ import LineBarComparison from "./components/LineBarComparison";
 import ComparisonLegend from "./components/ComparisonLegend";
 import ArrowSelector from "./components/ArrowSelector";
 import { updateMonthInView } from "../../features/entries/entriesSlice";
+import Record from "./components/Record";
+import moment from "moment";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
-  const totals = useAppSelector((state) => state.entries.totals);
-  const monthInView = useAppSelector((state) => state.entries.monthInView);
+  const { totals, monthInView, entries } = useAppSelector(
+    (state) => state.entries,
+  );
 
   const cashflowCompPercentage =
     (totals.current.cashflow / totals.prev.cashflow) * 100;
@@ -53,16 +56,16 @@ const HomepageContainer = () => {
       <Card className="mx-3 my-5 p-4">
         <div>
           <h3 className="text-sm font-bold">Wallet Dashboard</h3>
-          <p className="text-gra text-xs">
+          <p className="text-xs">
             Current month vs. previous month statistics report
           </p>
         </div>
 
-        <aside className="mt-3 flex flex-row flex-wrap gap-[0.6em]">
+        <div className="mt-3 flex flex-row flex-wrap justify-center gap-[0.6em]">
           <WalletGauge label="Cash-flow %" value={cashflowCompPercentage} />
-        </aside>
+        </div>
 
-        <aside className="mb-5 mt-8">
+        <div className="mb-5 mt-8">
           <LineBarComparison
             header="Expense"
             compPercentage={expenseCompPercentage}
@@ -75,13 +78,36 @@ const HomepageContainer = () => {
           <div className="my-5">
             <ComparisonLegend />
           </div>
-        </aside>
+        </div>
       </Card>
 
       <ArrowSelector
         text={monthInView}
         actionHandler={updateMonthInViewHandler}
       />
+
+      {/* TODO: retrieve account and category details to display using ids from entry */}
+      <Card className="mx-3 my-5 p-4">
+        <h3 className="text-sm font-bold">Records Overview</h3>
+        <hr className="my-3 text-gray-text-1" />
+
+        {entries.some(  // check if any record exists for the current month in view
+          (entry) =>
+            moment(entry.dateCreated).format("MMMM YYYY") === monthInView,
+        ) ? (
+          entries.map(  // if records exist, map through the records for the current month in view
+            (entry) =>
+              moment(entry.dateCreated).format("MMMM YYYY") === monthInView && (
+                <>
+                  <Record key={entry.id} entryDetails={entry} />
+                  <hr className="my-2 text-gray-text-1" />
+                </>
+              ),
+          )
+        ) : ( // display message if no records exist within the month
+          <p className="text-sm">No records available.</p>
+        )}
+      </Card>
 
       <UsersPage />
     </main>
