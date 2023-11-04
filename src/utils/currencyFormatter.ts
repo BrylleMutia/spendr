@@ -1,6 +1,6 @@
-const formatter = new Intl.NumberFormat("PH", {
+const currencyFormatter = new Intl.NumberFormat("PH", {
   style: "currency",
   currency: "PHP",
 });
 
-export default formatter;
+export default currencyFormatter;
