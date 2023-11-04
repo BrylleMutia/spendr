@@ -9,6 +9,7 @@ export type InitialState = {
 export type CategoryInput = {
    name: string;
    userId: string;
+   iconUrl: string;
 }
 
 export type Category = CategoryInput & {
