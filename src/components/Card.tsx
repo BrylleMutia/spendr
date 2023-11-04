@@ -5,7 +5,7 @@ type CardProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const Card = ({ children, className }: CardProps) => {
-  return <article className={`rounded-lg bg-white shadow-sm ${className}`}>{children}</article>;
+  return <section className={`rounded-lg bg-white shadow-sm ${className}`}>{children}</section>;
 };
 
 export default Card;
