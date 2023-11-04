@@ -101,8 +101,8 @@ export const getAllEntries = createAsyncThunk<
       entries.push({
         id: doc.id,
         dateCreated: dateConverter(doc.data().dateCreated.seconds),
-        accountId: doc.data().accountid,
-        categoryId: doc.data().categoryid,
+        accountId: doc.data().accountId,
+        categoryId: doc.data().categoryId,
         note: doc.data().note,
         amount: doc.data().amount,
         purpose: doc.data().purpose,
