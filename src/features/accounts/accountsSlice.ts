@@ -36,7 +36,7 @@ export const getAllAccounts = createAsyncThunk<
     querySnapshot.forEach((doc) => {
       accounts.push({
         id: doc.id,
-        userId: doc.data().userid,
+        userId: doc.data().userId,
         dateCreated: dateConverter(doc.data().dateCreated.seconds),
         name: doc.data().name,
         amount: doc.data().amount,

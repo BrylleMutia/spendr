@@ -19,12 +19,19 @@ const HomepageContainer = () => {
     (state) => state.entries,
   );
 
+  // if no records from prev month, return current total as percentage for current
   const cashflowCompPercentage =
-    (totals.current.cashflow / totals.prev.cashflow) * 100;
+    totals.prev.cashflow > 0
+      ? (totals.current.cashflow / totals.prev.cashflow) * 100
+      : totals.current.cashflow;
   const expenseCompPercentage =
-    (totals.current.expense / totals.prev.expense) * 100;
+    totals.prev.expense > 0
+      ? (totals.current.expense / totals.prev.expense) * 100
+      : totals.current.expense;
   const incomeCompPercentage =
-    (totals.current.income / totals.prev.income) * 100;
+    totals.prev.income > 0
+      ? (totals.current.income / totals.prev.income) * 100
+      : totals.current.income;
 
   const dispatch = useAppDispatch();
 
@@ -87,15 +94,18 @@ const HomepageContainer = () => {
       />
 
       {/* TODO: retrieve account and category details to display using ids from entry */}
+      {/* Configure data relationships in firestore - https://www.youtube.com/watch?v=35RlydUf6xo */}
       <Card className="mx-3 my-5 p-4">
         <h3 className="text-sm font-bold">Records Overview</h3>
         <hr className="my-3 text-gray-text-1" />
 
-        {entries.some(  // check if any record exists for the current month in view
+        {entries.some(
+          // check if any record exists for the current month in view
           (entry) =>
             moment(entry.dateCreated).format("MMMM YYYY") === monthInView,
         ) ? (
-          entries.map(  // if records exist, map through the records for the current month in view
+          entries.map(
+            // if records exist, map through the records for the current month in view
             (entry) =>
               moment(entry.dateCreated).format("MMMM YYYY") === monthInView && (
                 <>
@@ -104,7 +114,8 @@ const HomepageContainer = () => {
                 </>
               ),
           )
-        ) : ( // display message if no records exist within the month
+        ) : (
+          // display message if no records exist within the month
           <p className="text-sm">No records available.</p>
         )}
       </Card>
