@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getAllUsers } from "../features/users/usersSlice";
+import { getAllUsers, getUserById } from "../features/users/usersSlice";
 import { getAllAccounts } from "../features/accounts/accountsSlice";
 import { getAllCategories } from "../features/categories/categoriesSlice";
 import { addEntry, getAllEntries } from "../features/entries/entriesSlice";
 
 const UsersPage = () => {
-  const users = useAppSelector((state) => state.users);
+  const { user } = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
 
   const triggerAction = () => {
@@ -26,7 +26,7 @@ const UsersPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllUsers(0));
+    dispatch(getUserById("ABC123"));
     dispatch(getAllAccounts(0));
     dispatch(getAllCategories(0));
     dispatch(getAllEntries(0));
@@ -34,13 +34,11 @@ const UsersPage = () => {
 
   return (
     <div>
-      {users.users.map((user) => (
-        <div key={user.id}>
-          <h3>Name: {user.name}</h3>
-          <p>ID: {user.id}</p>
-          <p>Date Created: {user.dateCreated}</p>
-        </div>
-      ))}
+      <div key={user.id}>
+        <h3>Name: {user.name}</h3>
+        <p>ID: {user.id}</p>
+        <p>Date Created: {user.dateCreated}</p>
+      </div>
 
       <button onClick={triggerAction} style={{ background: "skyblue" }}>
         Trigger action

@@ -95,6 +95,8 @@ const HomepageContainer = () => {
 
       {/* TODO: retrieve account and category details to display using ids from entry */}
       {/* Configure data relationships in firestore - https://www.youtube.com/watch?v=35RlydUf6xo */}
+      {/* NOTE: Dont retrieve all account / category / entry data that is not related to the current user */}
+      
       <Card className="mx-3 my-5 p-4">
         <h3 className="text-sm font-bold">Records Overview</h3>
         <hr className="my-3 text-gray-text-1" />

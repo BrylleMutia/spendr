@@ -1,5 +1,5 @@
 export type InitialState = {
-  users: User[];
+  user: User;
   isLoading: boolean;
   error: ErrorResponse;
 };
