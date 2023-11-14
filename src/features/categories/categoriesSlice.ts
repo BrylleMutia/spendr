@@ -14,6 +14,7 @@ import {
   getDoc,
   limit,
   query,
+  where,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
 import dateConverter from "../../utils/dateConverter";
@@ -96,6 +97,38 @@ export const getAllCategories = createAsyncThunk<
   }
 });
 
+export const getAllCategoriesByUserId = createAsyncThunk<
+  Category[],
+  string,
+  { rejectValue: ErrorResponse }
+>("categories/getAllCategoriesByUserId", async (userId, thunkAPI) => {
+  try {
+    const categories: Category[] = [];
+    const categoriesRef = collection(firestoreDb, "categories");
+
+    await getDocs(query(categoriesRef, where("userId", "==", userId))).then(
+      (docs) => {
+        docs.forEach((doc) => {
+          categories.push({
+            id: doc.id,
+            name: doc.data().name,
+            userId: doc.data().userId,
+            dateCreated: dateConverter(doc.data().dateCreated.seconds),
+          });
+        });
+      },
+    );
+
+    return categories;
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
+
 const categoriesSlice = createSlice({
   name: "categories",
   initialState,
@@ -103,6 +136,14 @@ const categoriesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       getAllCategories.fulfilled,
+      (state, action: PayloadAction<Category[]>) => {
+        state.categories = action.payload;
+        state.isLoading = false;
+        state.error = { message: "" };
+      },
+    );
+    builder.addCase(
+      getAllCategoriesByUserId.fulfilled,
       (state, action: PayloadAction<Category[]>) => {
         state.categories = action.payload;
         state.isLoading = false;
@@ -120,11 +161,22 @@ const categoriesSlice = createSlice({
         state.error = { message: "" };
       },
     );
-    builder.addMatcher(isAnyOf(getAllCategories.pending), (state) => {
-      state.isLoading = true;
-    });
     builder.addMatcher(
-      isAnyOf(getAllCategories.rejected),
+      isAnyOf(
+        getAllCategories.pending,
+        getAllCategoriesByUserId.pending,
+        addNewCategory.pending,
+      ),
+      (state) => {
+        state.isLoading = true;
+      },
+    );
+    builder.addMatcher(
+      isAnyOf(
+        getAllCategories.rejected,
+        getAllCategoriesByUserId.rejected,
+        addNewCategory.rejected,
+      ),
       (state, action: PayloadAction<ErrorResponse>) => {
         state.isLoading = false;
         state.error = action.payload;

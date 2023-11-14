@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getUserById } from "../features/users/usersSlice";
 import { getAllAccountsByUserId } from "../features/accounts/accountsSlice";
-import { getAllCategories } from "../features/categories/categoriesSlice";
+import { getAllCategoriesByUserId } from "../features/categories/categoriesSlice";
 import { addEntry, getAllEntries } from "../features/entries/entriesSlice";
 
 const UsersPage = () => {
@@ -28,7 +28,7 @@ const UsersPage = () => {
   useEffect(() => {
     dispatch(getUserById("ABC123"));
     dispatch(getAllAccountsByUserId("ABC123"));
-    dispatch(getAllCategories(0));
+    dispatch(getAllCategoriesByUserId("ABC123"));
     dispatch(getAllEntries(0));
   }, []);
 
