@@ -15,6 +15,7 @@ import {
   Timestamp,
   limit,
   query,
+  where,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
 import dateConverter, {
@@ -119,6 +120,69 @@ export const getAllEntries = createAsyncThunk<
   }
 });
 
+export const getAllEntriesByAccountIds = createAsyncThunk<
+  Entry[],
+  string[],
+  { rejectValue: ErrorResponse }
+>("entries/getAllEntriesByAccountIds", async (accountIds, thunkAPI) => {
+  try {
+    const entries: Entry[] = [];
+    const entriesRef = collection(firestoreDb, "entries");
+    await getDocs(query(entriesRef, where("accountId", "in", accountIds))).then(
+      (docs) => {
+        docs.forEach((doc) => {
+          entries.push({
+            id: doc.id,
+            dateCreated: dateConverter(doc.data().dateCreated.seconds),
+            accountId: doc.data().accountId,
+            categoryId: doc.data().categoryId,
+            note: doc.data().note,
+            amount: doc.data().amount,
+            purpose: doc.data().purpose,
+          });
+        });
+      },
+    );
+
+    return entries;
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
+
+
+// helper functions
+const getTotals = (
+  entriesPayload: Entry[],
+  mode: "expense" | "income" | "cashflow",
+  monthModifier?: number
+) =>
+  entriesPayload.reduce((sum, current) => {
+    if (
+      dateConvertMonthYear(current.dateCreated) ===
+      currentDateMonthYear(monthModifier)
+    ) {
+      if (
+        current.purpose === "expense" &&
+        (mode === current.purpose || mode === "cashflow")
+      ) {
+        return sum - current.amount;
+      } else if (
+        current.purpose === "income" &&
+        (mode === current.purpose || mode === "cashflow")
+      ) {
+        return sum + current.amount;
+      } else {
+        return sum;
+      }
+    } else return sum;
+  }, 0);
+
+
 // slice
 const entriesSlice = createSlice({
   name: "entries",
@@ -137,89 +201,14 @@ const entriesSlice = createSlice({
         state.entries = action.payload;
 
         // calculate for current month totals (expense, income, and cashflow)
-        state.totals.current.expense = action.payload.reduce((sum, current) => {
-          if (
-            dateConvertMonthYear(current.dateCreated) === currentDateMonthYear()
-          ) {
-            if (current.purpose === "expense") {
-              return sum - current.amount;
-            } else {
-              return sum;
-            }
-          } else return sum;
-        }, 0);
-
-        state.totals.current.income = action.payload.reduce((sum, current) => {
-          if (
-            dateConvertMonthYear(current.dateCreated) === currentDateMonthYear()
-          ) {
-            if (current.purpose === "income") {
-              return sum + current.amount;
-            } else {
-              return sum;
-            }
-          } else return sum;
-        }, 0);
-
-        state.totals.current.cashflow = action.payload.reduce(
-          (sum, current) => {
-            if (
-              dateConvertMonthYear(current.dateCreated) ===
-              currentDateMonthYear()
-            ) {
-              if (current.purpose === "expense") {
-                return sum - current.amount;
-              } else if (current.purpose === "income") {
-                return sum + current.amount;
-              } else {
-                return sum;
-              }
-            } else return sum;
-          },
-          0,
-        );
+        state.totals.current.expense = getTotals(action.payload, "expense");
+        state.totals.current.income = getTotals(action.payload, "income");
+        state.totals.current.cashflow = getTotals(action.payload, "cashflow");
 
         // previous month totals
-        state.totals.prev.expense = action.payload.reduce((sum, current) => {
-          if (
-            dateConvertMonthYear(current.dateCreated) ===
-            currentDateMonthYear(1)
-          ) {
-            if (current.purpose === "expense") {
-              return sum - current.amount;
-            } else {
-              return sum;
-            }
-          } else return sum;
-        }, 0);
-
-        state.totals.prev.income = action.payload.reduce((sum, current) => {
-          if (
-            dateConvertMonthYear(current.dateCreated) ===
-            currentDateMonthYear(1)
-          ) {
-            if (current.purpose === "income") {
-              return sum + current.amount;
-            } else {
-              return sum;
-            }
-          } else return sum;
-        }, 0);
-
-        state.totals.prev.cashflow = action.payload.reduce((sum, current) => {
-          if (
-            dateConvertMonthYear(current.dateCreated) ===
-            currentDateMonthYear(1)
-          ) {
-            if (current.purpose === "expense") {
-              return sum - current.amount;
-            } else if (current.purpose === "income") {
-              return sum + current.amount;
-            } else {
-              return sum;
-            }
-          } else return sum;
-        }, 0);
+        state.totals.prev.expense = getTotals(action.payload, "expense", 1)
+        state.totals.prev.income = getTotals(action.payload, "income", 1)
+        state.totals.prev.cashflow = getTotals(action.payload, "cashflow", 1)
 
         // get latest month to display in mmmm yyyy format
         state.monthInView = moment(
