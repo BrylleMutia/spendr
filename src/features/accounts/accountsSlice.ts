@@ -6,7 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import type { InitialState, Account } from "./accountTypes";
 import { firestoreDb } from "../../api/fireStore";
-import { collection, getDocs, query, limit } from "firebase/firestore";
+import { collection, getDocs, query, limit, where } from "firebase/firestore";
 import { ErrorResponse } from "../users/userTypes";
 import dateConverter from "../../utils/dateConverter";
 
@@ -53,6 +53,39 @@ export const getAllAccounts = createAsyncThunk<
   }
 });
 
+export const getAllAccountsByUserId = createAsyncThunk<
+  Account[],
+  string,
+  { rejectValue: ErrorResponse }
+>("accounts/getAllAccountsByUserId", async (userId, thunkAPI) => {
+  try {
+    const accounts: Account[] = [];
+    const accountsRef = collection(firestoreDb, "accounts");
+
+    await getDocs(query(accountsRef, where("userId", "==", userId))).then(
+      (docs) => {
+        docs.forEach((doc) => {
+          accounts.push({
+            id: doc.id,
+            userId: doc.data().userId,
+            dateCreated: dateConverter(doc.data().dateCreated.seconds),
+            name: doc.data().name,
+            amount: doc.data().amount,
+          });
+        });
+      },
+    );
+
+    return accounts;
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
+
 // accounts slice
 const accountsSlice = createSlice({
   name: "accounts",
@@ -67,11 +100,22 @@ const accountsSlice = createSlice({
         state.error = { message: "" };
       },
     ),
-      builder.addMatcher(isAnyOf(getAllAccounts.pending), (state) => {
-        state.isLoading = true;
-      }),
+      builder.addCase(
+        getAllAccountsByUserId.fulfilled,
+        (state, action: PayloadAction<Account[]>) => {
+          state.accounts = action.payload;
+          state.isLoading = false;
+          state.error = { message: "" };
+        },
+      ),
       builder.addMatcher(
-        isAnyOf(getAllAccounts.rejected),
+        isAnyOf(getAllAccounts.pending, getAllAccountsByUserId.pending),
+        (state) => {
+          state.isLoading = true;
+        },
+      ),
+      builder.addMatcher(
+        isAnyOf(getAllAccounts.rejected, getAllAccountsByUserId.rejected),
         (state, action: PayloadAction<ErrorResponse>) => {
           state.error = action.payload;
           state.isLoading = false;
