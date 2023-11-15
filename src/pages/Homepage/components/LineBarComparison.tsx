@@ -17,10 +17,10 @@ const LineBarComparison = ({
         <h3 className="mb-2 text-sm font-light">{header}</h3>
         <h3
           className={`mb-2 text-sm font-light ${
-            roundedPercentage > 100 ? "text-negative" : "text-positive"
+            roundedPercentage > 100 ? "text-positive" : "text-negative"
           }`}
         >
-          +{`${roundedPercentage}%`}
+          {`${roundedPercentage}%`}
         </h3>
       </div>
       <div className="relative mb-2 w-full">
