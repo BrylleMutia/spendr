@@ -4,8 +4,17 @@ import {
   createSlice,
   isAnyOf,
 } from "@reduxjs/toolkit";
-import type { InitialState, User, ErrorResponse } from "./userTypes";
-import { firestoreDb } from "../../api/fireStore";
+import type {
+  InitialState,
+  User,
+  ErrorResponse,
+  authDetails,
+} from "./userTypes";
+import { firestoreDb, firebaseAuth } from "../../api/fireStore";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 import {
   collection,
   doc,
@@ -94,6 +103,58 @@ export const getUserById = createAsyncThunk<
   }
 });
 
+export const loginUser = createAsyncThunk<
+  User | undefined, // output type
+  authDetails, // input type
+  { rejectValue: ErrorResponse } // error type
+>("users/loginUser", async (authDetails, thunkAPI) => {
+  try {
+    const { email, password } = authDetails;
+
+    createUserWithEmailAndPassword(firebaseAuth, email, password).then(
+      (userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        return user;
+      },
+    );
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
+
+
+// TODO: configure auth
+export const registerUser = createAsyncThunk<
+  User, // output type
+  authDetails, // input type
+  { rejectValue: ErrorResponse } // error type
+>("users/registerUser", async (authDetails, thunkAPI) => {
+  try {
+    const { email, password } = authDetails;
+    let user = { dateCreated: "", id: "", name: "" };
+
+    await createUserWithEmailAndPassword(firebaseAuth, email, password).then(
+      (userCredential) => {
+        // Signed up
+        console.log(userCredential);
+      },
+    );
+
+    return user;
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
+
 // users slice
 const usersSlice = createSlice({
   name: "users",
@@ -116,13 +177,21 @@ const usersSlice = createSlice({
         state.isLoading = false;
         state.error = { message: "" };
       },
-    );
-    builder.addMatcher(
-      isAnyOf(getAllUsers.pending, getUserById.pending),
-      (state) => {
-        state.isLoading = true;
-      },
     ),
+      builder.addCase(
+        registerUser.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.user = action.payload;
+          state.isLoading = false;
+          state.error = { message: "" };
+        },
+      ),
+      builder.addMatcher(
+        isAnyOf(getAllUsers.pending, getUserById.pending),
+        (state) => {
+          state.isLoading = true;
+        },
+      ),
       builder.addMatcher(
         isAnyOf(getAllUsers.rejected, getUserById.rejected),
         (state, action: PayloadAction<ErrorResponse>) => {

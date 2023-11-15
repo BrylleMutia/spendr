@@ -4,12 +4,19 @@ export type InitialState = {
   error: ErrorResponse;
 };
 
-export type ErrorResponse = {
-  message: string;
-} | undefined;
+export type ErrorResponse =
+  | {
+      message: string;
+    }
+  | undefined;
 
 export type User = {
   id: string;
   dateCreated: string;
   name: string;
+};
+
+export type authDetails = {
+  email: string;
+  password: string;
 };
