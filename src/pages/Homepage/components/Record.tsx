@@ -2,6 +2,7 @@ import React from "react";
 import { Entry } from "../../../features/entries/entryTypes";
 import currencyFormatter from "../../../utils/currencyFormatter";
 import moment from "moment";
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
 
 type RecordProps = {
   entryDetails: Entry;
@@ -9,6 +10,8 @@ type RecordProps = {
 
 const Record = ({ entryDetails }: RecordProps) => {
   const { categoryId, accountId, amount, purpose, dateCreated } = entryDetails;
+  const { accounts } = useAppSelector((state) => state.accounts);
+  const { categories } = useAppSelector((state) => state.categories);
 
   const purposeStyling = () => {
     if (purpose === "expense") {
@@ -42,8 +45,12 @@ const Record = ({ entryDetails }: RecordProps) => {
       </div>
       <div className="flex w-full justify-between">
         <div>
-          <h3 className="text-sm font-medium">{categoryId}</h3>
-          <p className="text-xs text-gray-text-2">{accountId}</p>
+          <h3 className="text-sm font-medium">
+            {categories.find((category) => category.id === categoryId)?.name}
+          </h3>
+          <p className="text-xs text-gray-text-2">
+            {accounts.find((account) => account.id === accountId)?.name}
+          </p>
         </div>
         <div className="text-right">
           {purposeStyling()}
