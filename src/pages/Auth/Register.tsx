@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import { registerUser } from "../../features/users/usersSlice";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { firebaseAuth } from "../../api/fireStore";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -8,19 +9,35 @@ const Register = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  const handleRegisterUser = () => dispatch(registerUser({ email, password }));
+  const handleRegisterUser = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
+    createUserWithEmailAndPassword(firebaseAuth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("Registered user: ", user);
+        setEmail("");
+        setPassword("");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Error ocured: ", errorCode, errorMessage);
+      });
+  };
+
+  // TODO: Implement password strength indicator
   return (
     <div>
       <h1>Register</h1>
-      <form action="POST" method="_">
+      <form method="POST">
         <input
           type="email"
           id="email"
@@ -32,7 +49,7 @@ const Register = () => {
         <input
           type="password"
           id="password"
-          value={email}
+          value={password}
           onChange={handlePasswordChange}
           placeholder="Password"
         />
