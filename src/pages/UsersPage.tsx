@@ -26,7 +26,8 @@ const UsersPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getUserById("ABC123"));
+    // TODO: Get current user data using user id
+    // dispatch(getUserById("ABC123"));
     dispatch(getAllAccountsByUserId("ABC123"));
     dispatch(getAllCategoriesByUserId("ABC123"));
     dispatch(getAllEntries(0));
