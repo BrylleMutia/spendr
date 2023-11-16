@@ -48,7 +48,7 @@ const HomepageContainer = () => {
 
         <div className="mt-3 flex flex-wrap gap-[0.6em]">
           {accounts.map((account) => (
-            <Account accountDetails={account} />
+            <Account key={account.id} accountDetails={account} />
           ))}
           <AddAccount text="ADD ACCOUNT" />
         </div>

@@ -6,7 +6,8 @@ const Layout = () => {
     <>
       <Header />
       <main className="App">
-        <Outlet />
+        {/* Outlet is all child routes from App.tsx */}
+        <Outlet /> 
       </main>
     </>
   );
