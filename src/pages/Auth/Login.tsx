@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { firebaseAuth } from "../../api/fireStore";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useAppDispatch } from "../../app/hooks";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -23,12 +22,18 @@ const Login = () => {
     signInWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("Singed in user: ", user);
+        // console.log("Singed in user: ", user);
+
+        if (user.refreshToken) navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("An error occured: ", errorCode, errorMessage);
+      })
+      .finally(() => {
+        setEmail("");
+        setPassword("");
       });
   };
 

@@ -1,13 +1,13 @@
-import React, { ChangeEvent, useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../api/fireStore";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -22,14 +22,18 @@ const Register = () => {
     createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("Registered user: ", user);
-        setEmail("");
-        setPassword("");
+        // console.log("Registered user: ", user);
+
+        if (user.refreshToken) navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("Error ocured: ", errorCode, errorMessage);
+      })
+      .finally(() => {
+        setEmail("");
+        setPassword("");
       });
   };
 
