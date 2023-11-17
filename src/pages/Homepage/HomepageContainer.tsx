@@ -1,3 +1,4 @@
+import React from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 
 import Card from "../../components/Card";
@@ -92,7 +93,7 @@ const HomepageContainer = () => {
         text={monthInView}
         actionHandler={updateMonthInViewHandler}
       />
-      
+
       <Card className="mx-3 my-5 p-4">
         <h3 className="text-sm font-bold">Records Overview</h3>
         <hr className="my-3 text-gray-text-1" />
@@ -106,10 +107,10 @@ const HomepageContainer = () => {
             // if records exist, map through the records for the current month in view
             (entry) =>
               moment(entry.dateCreated).format("MMMM YYYY") === monthInView && (
-                <>
+                <React.Fragment key={entry.id}>
                   <Record key={entry.id} entryDetails={entry} />
                   <hr className="my-2 text-gray-text-1" />
-                </>
+                </React.Fragment>
               ),
           )
         ) : (
