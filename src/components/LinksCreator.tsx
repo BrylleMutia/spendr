@@ -5,6 +5,8 @@ import { CgProfile } from "react-icons/cg";
 import { SlList } from "react-icons/sl";
 import { Link } from "react-router-dom";
 import { firebaseAuth } from "../api/fireStore";
+import { useAppDispatch } from "../app/hooks";
+import { logoutUser } from "../features/users/usersSlice";
 
 type LinkType = {
   text: string;
@@ -14,10 +16,13 @@ type LinkType = {
 };
 
 export const LinksCreator = () => {
+  const dispatch = useAppDispatch();
+
   const handleLogOut = () => {
     signOut(firebaseAuth)
       .then(() => {
-        console.log("user signed out");
+        // console.log("user signed out");
+        dispatch(logoutUser())
       })
       .catch((error) => {
         console.log("error", error);

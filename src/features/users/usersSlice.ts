@@ -34,7 +34,7 @@ const initialState: InitialState = {
     email: "",
     emailVerified: false,
     photoURL: "",
-    accessToken: ""
+    accessToken: "",
   },
   isLoading: false,
   error: {
@@ -107,15 +107,25 @@ const initialState: InitialState = {
 //   }
 // });
 
-
 // users slice
 const usersSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
     saveUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload
-    }
+      state.user = action.payload;
+    },
+    logoutUser: (state) => {
+      state.user = {
+        dateCreated: "",
+        id: "",
+        name: "",
+        email: "",
+        emailVerified: false,
+        photoURL: "",
+        accessToken: "",
+      };
+    },
   },
   extraReducers: (builder) => {
     // builder.addCase(
@@ -126,7 +136,6 @@ const usersSlice = createSlice({
     //     state.error = { message: "" };
     //   },
     // );
-
     // builder.addCase(
     //   getUserById.fulfilled,
     //   (state, action: PayloadAction<User>) => {
@@ -154,5 +163,5 @@ const usersSlice = createSlice({
   },
 });
 
-export const { saveUser } = usersSlice.actions;
+export const { saveUser, logoutUser } = usersSlice.actions;
 export default usersSlice.reducer;
