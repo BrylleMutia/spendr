@@ -12,7 +12,6 @@ import { firebaseAuth } from "./api/fireStore";
 import { useAppDispatch } from "./app/hooks";
 import { saveUser } from "./features/users/usersSlice";
 import { User } from "./features/users/userTypes";
-import AuthHome from "./pages/Auth/AuthHome";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -40,13 +39,12 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {/* Private routes for auth check */}
+        {/* Private routes for auth check, check for access token on Layout */}
         <Route index element={<HomepageContainer />} />
       </Route>
 
-      <Route path="/auth" element={<AuthHome />} />
+      <Route path="/auth" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/reset" element={<PasswordReset />} />
     </Routes>
   );

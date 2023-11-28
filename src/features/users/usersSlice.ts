@@ -23,6 +23,7 @@ import {
   where,
   limit,
   query,
+  setDoc,
 } from "firebase/firestore";
 import dateConverter from "../../utils/dateConverter";
 
@@ -43,6 +44,25 @@ const initialState: InitialState = {
 };
 
 // query / thunk
+export const userSignUp = createAsyncThunk<
+  void, // output type
+  User, // input type
+  { rejectValue: ErrorResponse } // error type
+>("users/userSignUp", async (userDetails, thunkAPI) => {
+  try {
+    // Add a new document in collection "cities"
+    const { id, ...newUserInfo } = userDetails;
+
+    await setDoc(doc(firestoreDb, "users", id), newUserInfo);
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
+
 // export const getAllUsers = createAsyncThunk<
 //   User[], // output type
 //   number, // input type

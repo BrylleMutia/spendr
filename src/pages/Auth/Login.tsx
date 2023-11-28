@@ -61,6 +61,7 @@ const Login = () => {
         <button type="submit" onClick={handleUserLogin}>
           Login
         </button>
+        <Link to="/register">Create an account</Link>
         <Link to="/reset">Forgot Password</Link>
       </form>
     </div>
