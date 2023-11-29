@@ -40,8 +40,8 @@ const HomepageContainer = () => {
     dispatch(updateMonthInView(modifier));
 
   return (
-    <main>
-      <Card className="mx-3 my-5 p-4">
+    <main className="bg-gray-background py-5">
+      <Card className="mx-3 p-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold">Accounts</h3>
           <IoMdSettings />
