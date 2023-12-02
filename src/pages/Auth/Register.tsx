@@ -52,6 +52,7 @@ const Register = () => {
 
           // save user info to firestore db
           dispatch(userSignUp(updatedUserInfo));
+          dispatch(saveUser(updatedUserInfo))
         }
 
         if (user.refreshToken) navigate("/");
