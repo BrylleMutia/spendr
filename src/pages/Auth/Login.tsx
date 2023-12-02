@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { firebaseAuth } from "../../api/fireStore";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -13,6 +14,9 @@ const Login = () => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
 
   const navigate = useNavigate();
+
+  // auth providers
+  const provider = new GoogleAuthProvider();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -45,8 +49,38 @@ const Login = () => {
         setPassword("");
       });
   };
+  
+  const handleUserLoginWithGoogle = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    signInWithPopup(firebaseAuth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        if (credential) {
+          const token = credential.accessToken;
 
-  // TODO: Design auth pages / functionality
+          // The signed-in user info.
+          const user = result.user;
+
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+
+          if (token) navigate("/");
+        }
+      })
+      .catch((error) => {
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("An error has occured: ", errorCode, errorMessage);
+      });
+  };
+
   return (
     <div className="flex h-[100vh] items-center">
       <div className="mx-10">
@@ -148,7 +182,7 @@ const Login = () => {
           <button
             type="submit"
             className="btn-logo-secondary"
-            onClick={handleUserLogin}
+            onClick={handleUserLoginWithGoogle}
           >
             <FcGoogle style={{ fontSize: "1.5em" }} />
             <span>Continue with Google</span>
