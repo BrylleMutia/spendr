@@ -50,7 +50,7 @@ export const userSignUp = createAsyncThunk<
   { rejectValue: ErrorResponse } // error type
 >("users/userSignUp", async (userDetails, thunkAPI) => {
   try {
-    // Add a new document in collection "cities"
+    // Add a new document in collection "users"
     const { id, ...newUserInfo } = userDetails;
 
     await setDoc(doc(firestoreDb, "users", id), newUserInfo);

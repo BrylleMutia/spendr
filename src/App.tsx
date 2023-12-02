@@ -20,6 +20,8 @@ function App() {
   // save the user token from firebase to our global state and update it every time something happens to the user
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
+      // console.log(user)
+      
       if (user) {
         const updatedUserInfo: User = {
           id: user.uid,

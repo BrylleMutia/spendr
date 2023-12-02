@@ -4,12 +4,13 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import { BiHide } from "react-icons/bi";
+import { BiHide, BiShow } from "react-icons/bi";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [staySignedIn, setStaySignedIn] = useState(false);
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,6 +20,8 @@ const Login = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+  const handleShowPassword = () => setIsPasswordShown(prev => !prev)
 
   const handleStaySignedIn = () => setStaySignedIn((prev) => !prev);
 
@@ -43,7 +46,7 @@ const Login = () => {
       });
   };
 
-  // TODO: Design auth pages
+  // TODO: Design auth pages / functionality
   return (
     <div className="flex h-[100vh] items-center">
       <div className="mx-10">
@@ -69,16 +72,36 @@ const Login = () => {
             Email
           </label>
 
-          <div className="flex relative">
+          <div className="relative flex">
             <input
-              type="password"
+              type={isPasswordShown ? "text" : "password"}
               id="password"
-              className="rounded-md border-2 w-full border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent"
+              className="w-full rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent"
               value={password}
               onChange={handlePasswordChange}
               placeholder="Password"
             />
-            <BiHide style={{ position: "absolute", right: "4%", top: "30%", color: "#606060" }} />
+           <span onClick={handleShowPassword}>
+              {isPasswordShown ? (
+                <BiHide
+                  style={{
+                    position: "absolute",
+                    right: "4%",
+                    top: "30%",
+                    color: "#606060",
+                  }}
+                />
+              ) : (
+                <BiShow
+                  style={{
+                    position: "absolute",
+                    right: "4%",
+                    top: "30%",
+                    color: "#606060",
+                  }}
+                />
+              )}
+              </span>
             <label htmlFor="password" hidden>
               Password
             </label>
