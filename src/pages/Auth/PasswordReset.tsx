@@ -1,21 +1,24 @@
 import { sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
 import { firebaseAuth } from "../../api/fireStore";
-import { useAppDispatch } from "../../app/hooks";
+import { useNavigate } from "react-router-dom";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
 
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const handleReset = () => {
+  const handleReset = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     sendPasswordResetEmail(firebaseAuth, email)
       .then(() => {
         console.log("success");
+        navigate("/reset-sent");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -25,21 +28,35 @@ const PasswordReset = () => {
   };
 
   return (
-    <div>
-      <h1>Forgot your password?</h1>
-      <form method="POST">
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={handleEmailChange}
-          placeholder="Email"
-        />
-        <label htmlFor="email">Email</label>
-        <button type="submit" onClick={handleReset}>
-          Reset Password
-        </button>
-      </form>
+    <div className="flex h-[100vh] items-center">
+      <div className="mx-10">
+        <h1 className="mb-2 text-4xl font-extrabold text-blue-secondary">
+          Spendr
+        </h1>
+        <p className="mb-10 text-sm text-gray-text-2">
+          Smart Spending, Smart Saving: Achieve Financial Freedom Effortlessly
+          with Spendr.
+        </p>
+
+        <h3 className="mb-5 text-sm">Forgot password</h3>
+        <form method="POST" className="mb-5 flex flex-col gap-3">
+          <input
+            type="email"
+            id="email"
+            className="input-text-primary"
+            value={email}
+            onChange={handleEmailChange}
+            placeholder="Email"
+          />
+          <label htmlFor="email" hidden>
+            Email
+          </label>
+
+          <button type="submit" className="btn-primary mt-5" onClick={handleReset}>
+            Reset Password
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

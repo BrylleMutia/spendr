@@ -52,7 +52,7 @@ const Register = () => {
 
           // save user info to firestore db
           dispatch(userSignUp(updatedUserInfo));
-          dispatch(saveUser(updatedUserInfo))
+          dispatch(saveUser(updatedUserInfo));
         }
 
         if (user.refreshToken) navigate("/");
@@ -88,7 +88,7 @@ const Register = () => {
             id="name"
             value={displayName}
             onChange={handleNameChange}
-            className="rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent"
+            className="input-text-primary"
             placeholder="Name"
           />
           <label htmlFor="name" hidden>
@@ -98,7 +98,7 @@ const Register = () => {
           <input
             type="email"
             id="email"
-            className="rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent"
+            className="input-text-primary"
             value={email}
             onChange={handleEmailChange}
             placeholder="Email"
@@ -111,7 +111,7 @@ const Register = () => {
             <input
               type={isPasswordShown ? "text" : "password"}
               id="password"
-              className="w-full rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent"
+              className="input-password-primary"
               value={password}
               onChange={handlePasswordChange}
               placeholder="Password"
@@ -144,7 +144,7 @@ const Register = () => {
 
           <button
             type="submit"
-            className="rounded-md bg-blue-secondary py-2 font-medium text-white transition-all duration-200 hover:bg-blue-accent"
+            className="btn-primary"
             onClick={handleRegisterUser}
           >
             Register
@@ -153,10 +153,7 @@ const Register = () => {
 
         <div className="flex justify-between px-5">
           <p className="text-xs text-gray-text-2">Already have an account?</p>
-          <Link
-            to="/auth"
-            className="text-xs text-blue-secondary hover:text-blue-accent"
-          >
+          <Link to="/auth" className="btn-link-primary">
             Sign in
           </Link>
         </div>

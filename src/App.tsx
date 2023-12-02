@@ -12,6 +12,7 @@ import { firebaseAuth } from "./api/fireStore";
 import { useAppDispatch } from "./app/hooks";
 import { saveUser } from "./features/users/usersSlice";
 import { User } from "./features/users/userTypes";
+import ResetSent from "./pages/Auth/ResetSent";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -21,7 +22,7 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
       // console.log(user)
-      
+
       if (user) {
         const updatedUserInfo: User = {
           id: user.uid,
@@ -48,6 +49,7 @@ function App() {
       <Route path="/auth" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<PasswordReset />} />
+      <Route path="/reset-sent" element={<ResetSent />} />
     </Routes>
   );
 }

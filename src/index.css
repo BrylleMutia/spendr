@@ -9,3 +9,24 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+@layer components {
+  /* INPUTS */
+  .input-text-primary {
+    @apply rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent;
+  }
+  .input-password-primary {
+    @apply w-full rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent;
+  }
+
+  /* BUTTONS */
+  .btn-primary {
+    @apply rounded-md bg-blue-secondary py-2 font-medium text-white transition-all duration-200 hover:bg-blue-accent;
+  }
+  .btn-link-primary {
+    @apply pt-1 text-xs text-blue-secondary hover:text-blue-accent;
+  }
+  .btn-logo-secondary {
+    @apply flex items-center justify-center gap-3 rounded-md border-[1px] border-gray-text-2 bg-white py-2 text-sm text-gray-text-2 transition-all duration-200 hover:border-blue-accent hover:bg-blue-accent hover:text-white;
+  }
+}

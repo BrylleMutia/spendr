@@ -21,7 +21,7 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleShowPassword = () => setIsPasswordShown(prev => !prev)
+  const handleShowPassword = () => setIsPasswordShown((prev) => !prev);
 
   const handleStaySignedIn = () => setStaySignedIn((prev) => !prev);
 
@@ -63,7 +63,7 @@ const Login = () => {
           <input
             type="email"
             id="email"
-            className="rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent"
+            className="input-text-primary"
             value={email}
             onChange={handleEmailChange}
             placeholder="Email"
@@ -76,12 +76,12 @@ const Login = () => {
             <input
               type={isPasswordShown ? "text" : "password"}
               id="password"
-              className="w-full rounded-md border-2 border-gray-text-1 px-3 py-2 text-sm outline-none focus:border-blue-accent"
+              className="input-password-primary"
               value={password}
               onChange={handlePasswordChange}
               placeholder="Password"
             />
-           <span onClick={handleShowPassword}>
+            <span onClick={handleShowPassword}>
               {isPasswordShown ? (
                 <BiHide
                   style={{
@@ -101,7 +101,7 @@ const Login = () => {
                   }}
                 />
               )}
-              </span>
+            </span>
             <label htmlFor="password" hidden>
               Password
             </label>
@@ -123,17 +123,14 @@ const Login = () => {
                 Stay signed in
               </label>
             </div>
-            <Link
-              to="/reset"
-              className="pt-1 text-xs text-blue-secondary hover:text-blue-accent"
-            >
+            <Link to="/reset" className="btn-link-primary">
               Forgot Password
             </Link>
           </div>
 
           <button
             type="submit"
-            className="rounded-md bg-blue-secondary py-2 font-medium text-white transition-all duration-200 hover:bg-blue-accent"
+            className="btn-primary"
             onClick={handleUserLogin}
           >
             Sign In
@@ -150,7 +147,7 @@ const Login = () => {
         <div className="mb-7 flex flex-col gap-4">
           <button
             type="submit"
-            className="flex items-center justify-center gap-3 rounded-md border-[1px] border-gray-text-2 bg-white py-2 text-sm text-gray-text-2 transition-all duration-200 hover:border-blue-accent hover:bg-blue-accent hover:text-white"
+            className="btn-logo-secondary"
             onClick={handleUserLogin}
           >
             <FcGoogle style={{ fontSize: "1.5em" }} />
@@ -158,7 +155,7 @@ const Login = () => {
           </button>
           <button
             type="submit"
-            className="flex items-center justify-center gap-3 rounded-md border-[1px] border-gray-text-2 bg-white py-2 text-sm text-gray-text-2 transition-all duration-200 hover:border-blue-accent hover:bg-blue-accent hover:text-white"
+            className="btn-logo-secondary"
             onClick={handleUserLogin}
           >
             <FaFacebook style={{ fontSize: "1.5em", color: "#4267B2" }} />
@@ -168,10 +165,7 @@ const Login = () => {
 
         <div className="flex justify-between">
           <p className="text-xs text-gray-text-2">Don't have an account yet?</p>
-          <Link
-            to="/register"
-            className="text-xs text-blue-secondary hover:text-blue-accent"
-          >
+          <Link to="/register" className="btn-link-primary pt-0">
             Create an account
           </Link>
         </div>
