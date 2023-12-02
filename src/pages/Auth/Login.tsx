@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { firebaseAuth } from "../../api/fireStore";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+} from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -16,7 +22,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   // auth providers
-  const provider = new GoogleAuthProvider();
+  const googleProvider = new GoogleAuthProvider();
+  const facebookProvider = new FacebookAuthProvider();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -49,11 +56,11 @@ const Login = () => {
         setPassword("");
       });
   };
-  
-  const handleUserLoginWithGoogle = (
-    e: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    signInWithPopup(firebaseAuth, provider)
+
+  const handleGoogleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // you can prompt your users to sign in with their Facebook accounts either by opening a pop-up window or by redirecting to the sign-in page.
+    // redirect method is advised for mobile
+    signInWithPopup(firebaseAuth, googleProvider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -74,6 +81,46 @@ const Login = () => {
         const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("An error has occured: ", errorCode, errorMessage);
+      });
+  };
+
+  const handleFacebookLogin = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    // you can prompt your users to sign in with their Facebook accounts either by opening a pop-up window or by redirecting to the sign-in page.
+    // redirect method is advised for mobile
+    // TODO: Fix facebook login + redirect method
+    signInWithPopup(firebaseAuth, facebookProvider)
+      .then((result) => {
+        if (result) {
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          const credential = FacebookAuthProvider.credentialFromResult(result);
+
+          console.log("RESULT:", result);
+          console.log("CREDENTIAL:", credential);
+
+          if (credential) {
+            const token = credential.accessToken;
+
+            // The signed-in user info.
+            const user = result.user;
+
+            // IdP data available using getAdditionalUserInfo(result)
+            // ...
+
+            // if (token) navigate("/");
+          }
+        }
+      })
+      .catch((error) => {
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
 
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -182,7 +229,7 @@ const Login = () => {
           <button
             type="submit"
             className="btn-logo-secondary"
-            onClick={handleUserLoginWithGoogle}
+            onClick={handleGoogleLogin}
           >
             <FcGoogle style={{ fontSize: "1.5em" }} />
             <span>Continue with Google</span>
@@ -190,7 +237,7 @@ const Login = () => {
           <button
             type="submit"
             className="btn-logo-secondary"
-            onClick={handleUserLogin}
+            onClick={handleFacebookLogin}
           >
             <FaFacebook style={{ fontSize: "1.5em", color: "#4267B2" }} />
             <span>Continue with Facebook</span>
