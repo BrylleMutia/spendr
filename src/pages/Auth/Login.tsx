@@ -18,6 +18,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [staySignedIn, setStaySignedIn] = useState(false);
   const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -47,6 +48,8 @@ const Login = () => {
         if (user.refreshToken) navigate("/");
       })
       .catch((error) => {
+        setError(error.message);
+
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("An error occured: ", errorCode, errorMessage);
@@ -93,7 +96,7 @@ const Login = () => {
   ) => {
     // you can prompt your users to sign in with their Facebook accounts either by opening a pop-up window or by redirecting to the sign-in page.
     // redirect method is advised for mobile
-    // TODO: Fix facebook login + redirect method
+    // TODO: Low Prio - Fix facebook login + redirect method
     signInWithPopup(firebaseAuth, facebookProvider)
       .then((result) => {
         if (result) {
@@ -144,7 +147,7 @@ const Login = () => {
           <input
             type="email"
             id="email"
-            className="input-text-primary"
+            className={`input-text-primary ${error && "border-red-400"}`}
             value={email}
             onChange={handleEmailChange}
             placeholder="Email"
@@ -157,7 +160,7 @@ const Login = () => {
             <input
               type={isPasswordShown ? "text" : "password"}
               id="password"
-              className="input-password-primary"
+              className={`input-password-primary ${error && "border-red-400"}`}
               value={password}
               onChange={handlePasswordChange}
               placeholder="Password"
@@ -187,6 +190,10 @@ const Login = () => {
               Password
             </label>
           </div>
+
+          {error && (
+            <p className="text-xs text-red-500">Invalid email or password</p>
+          )}
 
           <div className="mb-6 flex justify-between">
             <div>

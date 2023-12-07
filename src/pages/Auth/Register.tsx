@@ -12,6 +12,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [error, setError] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -58,6 +59,8 @@ const Register = () => {
         if (user.refreshToken) navigate("/");
       })
       .catch((error) => {
+        setError(error.message);
+
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("Error ocured: ", errorCode, errorMessage);
@@ -68,8 +71,8 @@ const Register = () => {
       });
   };
 
-  // TODO: Implement password strength indicator
-  // TODO: Error messages
+  
+  // TODO: Low Prio - Implement password strength indicator
   return (
     <div className="flex h-[100vh] items-center">
       <div className="mx-10">
@@ -88,7 +91,7 @@ const Register = () => {
             id="name"
             value={displayName}
             onChange={handleNameChange}
-            className="input-text-primary"
+            className={`input-text-primary ${error && "border-red-400"}`}
             placeholder="Name"
           />
           <label htmlFor="name" hidden>
@@ -98,7 +101,7 @@ const Register = () => {
           <input
             type="email"
             id="email"
-            className="input-text-primary"
+            className={`input-text-primary ${error && "border-red-400"}`}
             value={email}
             onChange={handleEmailChange}
             placeholder="Email"
@@ -107,11 +110,11 @@ const Register = () => {
             Email
           </label>
 
-          <div className="relative mb-10 flex">
+          <div className="relative flex">
             <input
               type={isPasswordShown ? "text" : "password"}
               id="password"
-              className="input-password-primary"
+              className={`input-password-primary ${error && "border-red-400"}`}
               value={password}
               onChange={handlePasswordChange}
               placeholder="Password"
@@ -142,9 +145,13 @@ const Register = () => {
             </label>
           </div>
 
+          {error && (
+            <p className="text-xs text-red-500">Invalid name or email</p>
+          )}
+
           <button
             type="submit"
-            className="btn-primary"
+            className="btn-primary mt-10"
             onClick={handleRegisterUser}
           >
             Register
