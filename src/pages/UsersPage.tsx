@@ -3,10 +3,14 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getUserById } from "../features/users/usersSlice";
 import { getAllAccountsByUserId } from "../features/accounts/accountsSlice";
 import { getAllCategoriesByUserId } from "../features/categories/categoriesSlice";
-import { addEntry, getAllEntries } from "../features/entries/entriesSlice";
+import {
+  addEntry,
+  getAllEntriesByAccountIds,
+} from "../features/entries/entriesSlice";
 
 const UsersPage = () => {
   const { user } = useAppSelector((state) => state.users);
+  const { accounts } = useAppSelector((state) => state.accounts);
   const dispatch = useAppDispatch();
 
   const triggerAction = () => {
@@ -26,11 +30,15 @@ const UsersPage = () => {
   };
 
   useEffect(() => {
-    // TODO: Get current user data using user id
+    // TODO: NEXT - Add account / Add entry page
+    // TODO: CONFIRM - Get current user data using user id
     // dispatch(getUserById("ABC123"));
-    dispatch(getAllAccountsByUserId("ABC123"));
-    dispatch(getAllCategoriesByUserId("ABC123"));
-    dispatch(getAllEntries(0));
+    dispatch(getAllAccountsByUserId(user.id));
+    dispatch(getAllCategoriesByUserId(user.id));
+
+    const accountIds = accounts.map((account) => account.id);
+
+    dispatch(getAllEntriesByAccountIds(accountIds));
   }, []);
 
   return (
