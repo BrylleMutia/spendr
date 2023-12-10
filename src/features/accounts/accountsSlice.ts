@@ -62,7 +62,6 @@ export const getAllAccounts = createAsyncThunk<
   }
 });
 
-
 // TODO: NEXT - Add account
 export const getAllAccountsByUserId = createAsyncThunk<
   Account[],
@@ -141,13 +140,23 @@ const accountsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(
-      getAllAccounts.fulfilled,
-      (state, action: PayloadAction<Account[]>) => {
-        state.accounts = action.payload;
-        state.isLoading = false;
-        state.error = { message: "" };
+      addNewAccount.fulfilled,
+      (state, action: PayloadAction<Account | undefined>) => {
+        if (action.payload) {
+          state.accounts = [...state.accounts, action.payload];
+          state.isLoading = false;
+          state.error = { message: "" };
+        }
       },
     ),
+      builder.addCase(
+        getAllAccounts.fulfilled,
+        (state, action: PayloadAction<Account[]>) => {
+          state.accounts = action.payload;
+          state.isLoading = false;
+          state.error = { message: "" };
+        },
+      ),
       builder.addCase(
         getAllAccountsByUserId.fulfilled,
         (state, action: PayloadAction<Account[]>) => {
@@ -157,13 +166,21 @@ const accountsSlice = createSlice({
         },
       ),
       builder.addMatcher(
-        isAnyOf(getAllAccounts.pending, getAllAccountsByUserId.pending),
+        isAnyOf(
+          getAllAccounts.pending,
+          getAllAccountsByUserId.pending,
+          addNewAccount.pending,
+        ),
         (state) => {
           state.isLoading = true;
         },
       ),
       builder.addMatcher(
-        isAnyOf(getAllAccounts.rejected, getAllAccountsByUserId.rejected),
+        isAnyOf(
+          getAllAccounts.rejected,
+          getAllAccountsByUserId.rejected,
+          addNewAccount.rejected,
+        ),
         (state, action: PayloadAction<ErrorResponse>) => {
           state.error = action.payload;
           state.isLoading = false;

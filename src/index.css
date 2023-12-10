@@ -23,10 +23,16 @@
   .btn-primary {
     @apply rounded-md bg-blue-secondary py-2 font-medium text-white transition-all duration-200 hover:bg-blue-accent;
   }
+  .btn-accent {
+    @apply rounded-md bg-blue-accent py-2 font-medium text-white transition-all duration-200 hover:bg-blue-secondary;
+  }
   .btn-link-primary {
     @apply pt-1 text-xs text-blue-secondary hover:text-blue-accent;
   }
   .btn-logo-secondary {
     @apply flex items-center justify-center gap-3 rounded-md border-[1px] border-gray-text-2 bg-white py-2 text-sm text-gray-text-2 transition-all duration-200 hover:border-blue-accent hover:bg-blue-accent hover:text-white;
+  }
+  .btn-logo-accent {
+    @apply flex items-center justify-center gap-3 rounded-md border-[1px] bg-blue-accent py-2 text-sm transition-all duration-200 hover:border-blue-secondary hover:bg-blue-secondary text-white;
   }
 }
