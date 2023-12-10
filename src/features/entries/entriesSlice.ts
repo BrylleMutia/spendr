@@ -54,6 +54,7 @@ export const addEntry = createAsyncThunk<
   try {
     // add document
     const entriesRef = collection(firestoreDb, "entries");
+    
     const newAddedEntry = await addDoc(entriesRef, {
       dateCreated: Timestamp.fromDate(new Date()),
       ...entryData,

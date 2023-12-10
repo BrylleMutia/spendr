@@ -6,10 +6,13 @@ export type InitialState = {
   error: ErrorResponse;
 };
 
-export type Account = {
-  id: string;
-  dateCreated: string;
+export type NewAccount = {
   userId: string;
   name: string;
   amount: number;
+};
+
+export type Account = NewAccount & {
+  id: string;
+  dateCreated: string;
 };

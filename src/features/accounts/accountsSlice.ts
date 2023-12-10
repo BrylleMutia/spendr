@@ -4,9 +4,18 @@ import {
   createSlice,
   isAnyOf,
 } from "@reduxjs/toolkit";
-import type { InitialState, Account } from "./accountTypes";
+import type { InitialState, Account, NewAccount } from "./accountTypes";
 import { firestoreDb } from "../../api/fireStore";
-import { collection, getDocs, query, limit, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  limit,
+  where,
+  addDoc,
+  Timestamp,
+  getDoc,
+} from "firebase/firestore";
 import { ErrorResponse } from "../users/userTypes";
 import dateConverter from "../../utils/dateConverter";
 
@@ -53,6 +62,8 @@ export const getAllAccounts = createAsyncThunk<
   }
 });
 
+
+// TODO: NEXT - Add account
 export const getAllAccountsByUserId = createAsyncThunk<
   Account[],
   string,
@@ -77,6 +88,43 @@ export const getAllAccountsByUserId = createAsyncThunk<
     );
 
     return accounts;
+  } catch (err) {
+    if (!err) {
+      throw err;
+    }
+
+    return thunkAPI.rejectWithValue({ message: err as string });
+  }
+});
+
+export const addNewAccount = createAsyncThunk<
+  Account | undefined,
+  NewAccount,
+  { rejectValue: ErrorResponse }
+>("accounts/addNewAccount", async (accountDetails, thunkAPI) => {
+  try {
+    const accountsRef = collection(firestoreDb, "accounts");
+
+    const newAccount = await addDoc(accountsRef, {
+      dateCreated: Timestamp.fromDate(new Date()),
+      ...accountDetails,
+    }).then((docRef) => {
+      return getDoc(docRef).then((doc) => {
+        if (doc.exists()) {
+          console.log("Added new account!", doc.data());
+
+          return {
+            id: doc.id,
+            dateCreated: dateConverter(doc.data().dateCreated.seconds),
+            userId: doc.data().userId,
+            name: doc.data().name,
+            amount: doc.data().amount,
+          };
+        }
+      });
+    });
+
+    return newAccount;
   } catch (err) {
     if (!err) {
       throw err;
