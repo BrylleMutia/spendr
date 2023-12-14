@@ -62,7 +62,6 @@ export const getAllAccounts = createAsyncThunk<
   }
 });
 
-// TODO: NEXT - Add account
 export const getAllAccountsByUserId = createAsyncThunk<
   Account[],
   string,

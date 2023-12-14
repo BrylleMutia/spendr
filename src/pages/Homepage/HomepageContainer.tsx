@@ -13,6 +13,7 @@ import ArrowSelector from "./components/ArrowSelector";
 import { updateMonthInView } from "../../features/entries/entriesSlice";
 import Record from "./components/Record";
 import moment from "moment";
+import AddEntry from "./components/AddEntry";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
@@ -118,6 +119,8 @@ const HomepageContainer = () => {
           <p className="text-sm">No records available.</p>
         )}
       </Card>
+
+      <AddEntry />
 
       <UsersPage />
     </main>

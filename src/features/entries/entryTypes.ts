@@ -22,7 +22,7 @@ export type Entry = EntryInput & {
   dateCreated: string;
 };
 
-type Purpose = "income" | "expense";
+export type Purpose = "income" | "expense" | "transfer";
 
 export type EntryInput = {
   categoryId: string;

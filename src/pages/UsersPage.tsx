@@ -30,7 +30,6 @@ const UsersPage = () => {
   };
 
   useEffect(() => {
-    // TODO: NEXT - Add account / Add category / Add entry page
     // TODO: CONFIRM - Get current user data using user id
     // dispatch(getUserById("ABC123"));
     dispatch(getAllAccountsByUserId(user.id));
