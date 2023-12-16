@@ -1,16 +1,10 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getUserById } from "../features/users/usersSlice";
-import { getAllAccountsByUserId } from "../features/accounts/accountsSlice";
-import { getAllCategoriesByUserId } from "../features/categories/categoriesSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks"
 import {
-  addEntry,
-  getAllEntriesByAccountIds,
+  addEntry
 } from "../features/entries/entriesSlice";
 
 const UsersPage = () => {
   const { user } = useAppSelector((state) => state.users);
-  const { accounts } = useAppSelector((state) => state.accounts);
   const dispatch = useAppDispatch();
 
   const triggerAction = () => {
@@ -28,17 +22,6 @@ const UsersPage = () => {
     //   userId: "ABC123"
     // }))
   };
-
-  useEffect(() => {
-    // TODO: CONFIRM - Get current user data using user id
-    // dispatch(getUserById("ABC123"));
-    dispatch(getAllAccountsByUserId(user.id));
-    dispatch(getAllCategoriesByUserId(user.id));
-
-    const accountIds = accounts.map((account) => account.id);
-
-    dispatch(getAllEntriesByAccountIds(accountIds));
-  }, []);
 
   return (
     <div>

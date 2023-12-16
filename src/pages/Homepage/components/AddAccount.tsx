@@ -11,7 +11,9 @@ type AddAccountProps = {
 
 const AddAccount = ({ text }: AddAccountProps) => {
   const [accountName, setAccountName] = useState("");
-  const [initialAmount, setInitialAmount] = useState(0);
+  const [initialAmount, setInitialAmount] = useState<number | undefined>(
+    undefined,
+  );
   const [isAddAcountModalOpen, setIsAddAccountModalOpen] = useState(false);
 
   const { id } = useAppSelector((state) => state.users.user);
@@ -22,17 +24,23 @@ const AddAccount = ({ text }: AddAccountProps) => {
   const handleChangeInitialAmount = (e: React.ChangeEvent<HTMLInputElement>) =>
     setInitialAmount(Number(e.target.value));
 
-  const handleAddNewAccount = () => {
-    const newAccountDetails = {
-      userId: id,
-      name: accountName,
-      amount: initialAmount,
-    };
+  const handleAddNewAccount = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
+    e.preventDefault();
 
-    dispatch(addNewAccount(newAccountDetails));
-    setIsAddAccountModalOpen(false);
-    setAccountName("");
-    setInitialAmount(0);
+    if (accountName) {
+      const newAccountDetails = {
+        userId: id,
+        name: accountName,
+        amount: initialAmount ?? 0,
+      };
+
+      dispatch(addNewAccount(newAccountDetails));
+      setIsAddAccountModalOpen(false);
+      setAccountName("");
+      setInitialAmount(0);
+    }
   };
 
   const openAddAccountModal = () => setIsAddAccountModalOpen(true);
@@ -67,6 +75,7 @@ const AddAccount = ({ text }: AddAccountProps) => {
             className="input-text-primary"
             value={accountName}
             onChange={handleChangeAccountName}
+            required
           />
           <label htmlFor="initial-amount" hidden>
             Initial Amount

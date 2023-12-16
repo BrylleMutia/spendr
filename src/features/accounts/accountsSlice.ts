@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { ErrorResponse } from "../users/userTypes";
 import dateConverter from "../../utils/dateConverter";
+import { getAllEntriesByAccountIds } from "../entries/entriesSlice";
 
 const initialState: InitialState = {
   accounts: [],

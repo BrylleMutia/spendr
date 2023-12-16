@@ -9,14 +9,34 @@ import Login from "./pages/Auth/Login";
 import PasswordReset from "./pages/Auth/PasswordReset";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "./api/fireStore";
-import { useAppDispatch } from "./app/hooks";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { saveUser } from "./features/users/usersSlice";
 import { User } from "./features/users/userTypes";
 import ResetSent from "./pages/Auth/ResetSent";
+import { getAllAccountsByUserId } from "./features/accounts/accountsSlice";
+import { getAllCategoriesByUserId } from "./features/categories/categoriesSlice";
+import { getAllEntriesByAccountIds } from "./features/entries/entriesSlice";
+import type { Account } from "./features/accounts/accountTypes";
 
 function App() {
+  const { user } = useAppSelector((state) => state.users);
+  // const { accounts } = useAppSelector((state) => state.accounts);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // TODO: NEXT - Get current user data using user id
+    dispatch(getAllAccountsByUserId(user.id))
+      .unwrap()
+      .then((accounts) => {
+        const accountIds = accounts.map((account) => account.id);
+        console.log(accountIds);
+        dispatch(getAllEntriesByAccountIds(accountIds));
+      });
+
+    dispatch(getAllCategoriesByUserId(user.id));
+  }, []);
 
   // save the user token from firebase to our global state and update it every time something happens to the user
   useEffect(() => {

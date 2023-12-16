@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import Modal from "../../../components/Modal";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { addEntry } from "../../../features/entries/entriesSlice";
 import { EntryInput, Purpose } from "../../../features/entries/entryTypes";
 import { IoMdAddCircle } from "react-icons/io";
+import AddCategory from "./AddCategory";
 
 const AddEntry = () => {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState<number | undefined>(undefined);
   const [selectedCategoryId, setSelectedCategory] = useState("");
   const [selectedAccountId, setSelectedAccount] = useState("");
   const [purpose, setPurpose] = useState<Purpose>("expense");
   const [note, setNote] = useState("");
   const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
 
   const { id } = useAppSelector((state) => state.users.user);
   const { accounts } = useAppSelector((state) => state.accounts);
@@ -34,7 +36,11 @@ const AddEntry = () => {
   const handleChangeNote = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNote(e.target.value);
 
-  const handleAddNewEntry = () => {
+  const handleAddNewEntry = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+
     if (purpose && amount && selectedAccountId && selectedCategoryId) {
       const newEntryDetails: EntryInput = {
         categoryId: selectedCategoryId,
@@ -48,9 +54,19 @@ const AddEntry = () => {
       setIsAddEntryModalOpen(false);
 
       setPurpose("expense");
-      setAmount(0);
+      setAmount(undefined);
       setNote("");
+
+      console.log("add new entry triggered");
     }
+  };
+
+  const handleOpenCategoryModal = () => setIsAddCategoryModalOpen(true);
+  const closeAddCategoryModal = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
+    e.stopPropagation(); // stop event propagation to parent from modal portal component
+    setIsAddCategoryModalOpen(false);
   };
 
   const openAddEntryModal = () => setIsAddEntryModalOpen(true);
@@ -59,7 +75,9 @@ const AddEntry = () => {
     setIsAddEntryModalOpen(false);
   };
 
-  // TODO: NEXT - Add category modal / fix design for modals
+  // TODO: Fix design for modals
+  // TODO: Add toast notifications
+  // TODO: Improved category UI
   return (
     <button
       className="fixed bottom-10 right-7 h-[3.5em] w-[3.5em] rounded-full bg-blue-accent"
@@ -87,6 +105,7 @@ const AddEntry = () => {
             className="input-text-primary"
             value={amount}
             onChange={handleChangeAmount}
+            required
           />
 
           <label htmlFor="category" hidden>
@@ -97,13 +116,17 @@ const AddEntry = () => {
             id="category"
             value={selectedCategoryId}
             onChange={handleChangeCategory}
+            onLoad={handleChangeCategory}
             className="input-text-primary bg-white"
+            required
           >
-            {categories.map((category, index) => (
-              <option value={category.id} selected={index === 1 ? true : false}>
-                {category.name}
-              </option>
+            <option value="" disabled selected className="">
+              Category
+            </option>
+            {categories.map((category) => (
+              <option value={category.id}>{category.name}</option>
             ))}
+            <option onClick={handleOpenCategoryModal}>New category</option>
           </select>
 
           <label htmlFor="account" hidden>
@@ -115,11 +138,13 @@ const AddEntry = () => {
             value={selectedAccountId}
             className="input-text-primary bg-white"
             onChange={handleChangeAccount}
+            required
           >
-            {accounts.map((account, index) => (
-              <option value={account.id} selected={index === 1 ? true : false}>
-                {account.name}
-              </option>
+            <option value="" disabled selected>
+              Account
+            </option>
+            {accounts.map((account) => (
+              <option value={account.id}>{account.name}</option>
             ))}
           </select>
 
@@ -132,6 +157,7 @@ const AddEntry = () => {
             value={purpose}
             className="input-text-primary bg-white"
             onChange={handleChangePurpose}
+            required
           >
             <option value="expense" selected>
               Expense
@@ -151,12 +177,21 @@ const AddEntry = () => {
             value={note}
             onChange={handleChangeNote}
           />
-          <button type="submit" className="btn-logo-accent mt-3">
-            <IoMdAddCircle style={{}} />
+          <button
+            type="submit"
+            className="btn-logo-accent mt-3"
+            onClick={handleAddNewEntry}
+          >
+            <IoMdAddCircle />
             <span>Add entry</span>
           </button>
         </form>
       </Modal>
+
+      <AddCategory
+        isOpen={isAddCategoryModalOpen}
+        handleCloseModal={closeAddCategoryModal}
+      />
     </button>
   );
 };

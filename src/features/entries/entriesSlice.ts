@@ -16,6 +16,7 @@ import {
   limit,
   query,
   where,
+  documentId,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
 import dateConverter, {
@@ -54,7 +55,7 @@ export const addEntry = createAsyncThunk<
   try {
     // add document
     const entriesRef = collection(firestoreDb, "entries");
-    
+
     const newAddedEntry = await addDoc(entriesRef, {
       dateCreated: Timestamp.fromDate(new Date()),
       ...entryData,
@@ -155,20 +156,19 @@ export const getAllEntriesByAccountIds = createAsyncThunk<
   }
 });
 
-
 // helper functions
 const getTotals = (
   entriesPayload: Entry[],
   mode: "expense" | "income" | "cashflow",
-  monthModifier?: number
+  monthModifier?: number,
 ) =>
   /**
    * Function used to get total expense, income, and cashflow in specified month with relation to current month (month modifier)
-   * 
+   *
    * @param   entriesPayload    all entries from state
    * @param   mode              total to be calculated
    * @param   monthModifier     how many months back to get with relation to current month (ex. 1 would be current month - 1 month)
-   * 
+   *
    * @return  total
    */
 
@@ -193,7 +193,6 @@ const getTotals = (
     } else return sum;
   }, 0);
 
-
 // slice
 const entriesSlice = createSlice({
   name: "entries",
@@ -207,7 +206,7 @@ const entriesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(
-      getAllEntries.fulfilled,
+      getAllEntriesByAccountIds.fulfilled,
       (state, action: PayloadAction<Entry[]>) => {
         state.entries = action.payload;
 
@@ -217,9 +216,9 @@ const entriesSlice = createSlice({
         state.totals.current.cashflow = getTotals(action.payload, "cashflow");
 
         // previous month totals
-        state.totals.prev.expense = getTotals(action.payload, "expense", 1)
-        state.totals.prev.income = getTotals(action.payload, "income", 1)
-        state.totals.prev.cashflow = getTotals(action.payload, "cashflow", 1)
+        state.totals.prev.expense = getTotals(action.payload, "expense", 1);
+        state.totals.prev.income = getTotals(action.payload, "income", 1);
+        state.totals.prev.cashflow = getTotals(action.payload, "cashflow", 1);
 
         // get latest month to display in mmmm yyyy format
         state.monthInView = moment(
@@ -242,11 +241,14 @@ const entriesSlice = createSlice({
         }
       },
     );
-    builder.addMatcher(isAnyOf(getAllEntries.pending), (state) => {
-      state.isLoading = true;
-    });
     builder.addMatcher(
-      isAnyOf(getAllEntries.rejected),
+      isAnyOf(getAllEntriesByAccountIds.pending, addEntry.pending),
+      (state) => {
+        state.isLoading = true;
+      },
+    );
+    builder.addMatcher(
+      isAnyOf(getAllEntriesByAccountIds.rejected, addEntry.rejected),
       (state, action: PayloadAction<ErrorResponse>) => {
         state.error = action.payload;
         state.isLoading = false;

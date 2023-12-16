@@ -40,19 +40,25 @@ export const addNewCategory = createAsyncThunk<
       dateCreated: Timestamp.fromDate(new Date()),
     };
 
-    await addDoc(categoriesRef, newCategoryWithTimestamp).then((docRef) => {
+    const newlyAddedCategory = await addDoc(
+      categoriesRef,
+      newCategoryWithTimestamp,
+    ).then((docRef) => {
       // get newly added category
-      getDoc(docRef).then((doc) => {
+      return getDoc(docRef).then((doc) => {
         if (doc.exists()) {
           return {
             id: doc.id,
             name: doc.data().name,
             userId: doc.data().userid,
+            iconUrl: doc.data().iconUrl,
             dateCreated: dateConverter(doc.data().dateCreated.seconds), // convert timestamp from firebase to date
           };
         }
       });
     });
+
+    return newlyAddedCategory;
   } catch (err) {
     if (!err) {
       throw err;
@@ -82,6 +88,7 @@ export const getAllCategories = createAsyncThunk<
           id: doc.id,
           name: doc.data().name,
           userId: doc.data().userId,
+          iconUrl: doc.data().iconUrl,
           dateCreated: dateConverter(doc.data().dateCreated.seconds), // convert timestamp from firebase to date
         });
       }
@@ -113,6 +120,7 @@ export const getAllCategoriesByUserId = createAsyncThunk<
             id: doc.id,
             name: doc.data().name,
             userId: doc.data().userId,
+            iconUrl: doc.data().iconUrl,
             dateCreated: dateConverter(doc.data().dateCreated.seconds),
           });
         });

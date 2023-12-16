@@ -10,6 +10,11 @@
   box-sizing: border-box;
 }
 
+input:required {
+  border-color: #ff0000;
+  border-width: 2px;
+}
+
 @layer components {
   /* INPUTS */
   .input-text-primary {
@@ -33,6 +38,6 @@
     @apply flex items-center justify-center gap-3 rounded-md border-[1px] border-gray-text-2 bg-white py-2 text-sm text-gray-text-2 transition-all duration-200 hover:border-blue-accent hover:bg-blue-accent hover:text-white;
   }
   .btn-logo-accent {
-    @apply flex items-center justify-center gap-3 rounded-md border-[1px] bg-blue-accent py-2 text-sm transition-all duration-200 hover:border-blue-secondary hover:bg-blue-secondary text-white;
+    @apply flex items-center justify-center gap-3 rounded-md border-[1px] bg-blue-accent py-2 text-sm text-white transition-all duration-200 hover:border-blue-secondary hover:bg-blue-secondary;
   }
 }
