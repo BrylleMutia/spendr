@@ -51,7 +51,7 @@ const AddEntry = () => {
       };
 
       dispatch(addEntry(newEntryDetails));
-      setIsAddEntryModalOpen(false);
+      closeAddEntryModal(e);
 
       setPurpose("expense");
       setAmount(undefined);
@@ -70,7 +70,9 @@ const AddEntry = () => {
   };
 
   const openAddEntryModal = () => setIsAddEntryModalOpen(true);
-  const closeAddEntryModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const closeAddEntryModal = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
     e.stopPropagation(); // stop event propagation to parent from modal portal component
     setIsAddEntryModalOpen(false);
   };

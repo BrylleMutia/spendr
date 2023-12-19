@@ -17,6 +17,7 @@ import {
   query,
   where,
   documentId,
+  updateDoc,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
 import dateConverter, {
@@ -46,6 +47,9 @@ const initialState: InitialState = {
   },
 };
 
+// Firestore DB ref
+const entriesRef = collection(firestoreDb, "entries");
+
 // thunk
 export const addEntry = createAsyncThunk<
   Entry | undefined,
@@ -60,18 +64,35 @@ export const addEntry = createAsyncThunk<
       dateCreated: Timestamp.fromDate(new Date()),
       ...entryData,
     }).then((docRef) => {
-      return getDoc(docRef).then((doc) => {
-        if (doc.exists()) {
-          console.log("Add entry triggered!", doc.data());
+      return getDoc(docRef).then((entryDocData) => {
+        if (entryDocData.exists()) {
+          console.log("Add entry triggered!", entryDocData.data());
+
+          // update account amount
+          const accountsRef = doc(
+            firestoreDb,
+            "accounts",
+            entryDocData.data().accountId,
+          );
+
+          // TODO: fix state update for updated account amount upon new record entry
+          getDoc(accountsRef).then(async (accountDocData) => {
+            if (accountDocData.exists()) {
+              await updateDoc(accountsRef, {
+                amount:
+                  accountDocData.data().amount + entryDocData.data().amount,
+              });
+            }
+          });
 
           return {
-            id: doc.id,
-            categoryId: doc.data().categoryId,
-            dateCreated: dateConverter(doc.data().dateCreated.seconds),
-            accountId: doc.data().accountId,
-            note: doc.data().note,
-            amount: doc.data().amount,
-            purpose: doc.data().purpose,
+            id: entryDocData.id,
+            categoryId: entryDocData.data().categoryId,
+            dateCreated: dateConverter(entryDocData.data().dateCreated.seconds),
+            accountId: entryDocData.data().accountId,
+            note: entryDocData.data().note,
+            amount: entryDocData.data().amount,
+            purpose: entryDocData.data().purpose,
           };
         }
       });
@@ -94,7 +115,6 @@ export const getAllEntries = createAsyncThunk<
 >("entries/getAllEntries", async (limitNum, thunkAPI) => {
   try {
     const entries: Entry[] = [];
-    const entriesRef = collection(firestoreDb, "entries");
     let querySnapshot = await getDocs(query(entriesRef));
     if (limitNum) {
       querySnapshot = await getDocs(query(entriesRef, limit(limitNum)));
@@ -129,7 +149,6 @@ export const getAllEntriesByAccountIds = createAsyncThunk<
 >("entries/getAllEntriesByAccountIds", async (accountIds, thunkAPI) => {
   try {
     const entries: Entry[] = [];
-    const entriesRef = collection(firestoreDb, "entries");
     await getDocs(query(entriesRef, where("accountId", "in", accountIds))).then(
       (docs) => {
         docs.forEach((doc) => {

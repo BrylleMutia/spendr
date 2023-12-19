@@ -10,7 +10,7 @@
   box-sizing: border-box;
 }
 
-input:required {
+input:invalid {
   border-color: #ff0000;
   border-width: 2px;
 }

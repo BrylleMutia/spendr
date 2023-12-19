@@ -16,7 +16,6 @@ import ResetSent from "./pages/Auth/ResetSent";
 import { getAllAccountsByUserId } from "./features/accounts/accountsSlice";
 import { getAllCategoriesByUserId } from "./features/categories/categoriesSlice";
 import { getAllEntriesByAccountIds } from "./features/entries/entriesSlice";
-import type { Account } from "./features/accounts/accountTypes";
 
 function App() {
   const { user } = useAppSelector((state) => state.users);
@@ -24,19 +23,6 @@ function App() {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // TODO: NEXT - Get current user data using user id
-    dispatch(getAllAccountsByUserId(user.id))
-      .unwrap()
-      .then((accounts) => {
-        const accountIds = accounts.map((account) => account.id);
-        console.log(accountIds);
-        dispatch(getAllEntriesByAccountIds(accountIds));
-      });
-
-    dispatch(getAllCategoriesByUserId(user.id));
-  }, []);
 
   // save the user token from firebase to our global state and update it every time something happens to the user
   useEffect(() => {
@@ -55,6 +41,17 @@ function App() {
         };
 
         dispatch(saveUser(updatedUserInfo));
+
+        // TODO: Optimize API calls / implement normalized data rtk
+        dispatch(getAllAccountsByUserId(user.uid))
+          .unwrap()
+          .then((accounts) => {
+            const accountIds = accounts.map((account) => account.id);
+            console.log(accountIds);
+            dispatch(getAllEntriesByAccountIds(accountIds));
+          });
+
+        dispatch(getAllCategoriesByUserId(user.uid));
       } else navigate("/auth");
     });
   }, [firebaseAuth, dispatch]);

@@ -4,7 +4,7 @@ import { MdClose } from "react-icons/md";
 
 type ModalProps = {
   isOpen: boolean;
-  closeModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  closeModal: (e: React.FormEvent<HTMLButtonElement | HTMLFormElement>) => void;
   children: React.ReactNode;
 };
 
