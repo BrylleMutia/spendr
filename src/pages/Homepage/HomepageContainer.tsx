@@ -14,10 +14,11 @@ import { updateMonthInView } from "../../features/entries/entriesSlice";
 import Record from "./components/Record";
 import moment from "moment";
 import AddEntry from "./components/AddEntry";
+import SkeletonLoader from "../../components/SkeletonLoader";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
-  const { totals, monthInView, entries } = useAppSelector(
+  const { totals, monthInView, entries, isLoading } = useAppSelector(
     (state) => state.entries,
   );
   const [totalsPercentage, setTotalsPercentage] = useState({
@@ -66,9 +67,13 @@ const HomepageContainer = () => {
         </div>
 
         <div className="mt-3 flex flex-wrap gap-[0.6em]">
-          {accounts.map((account) => (
-            <Account key={account.id} accountDetails={account} />
-          ))}
+          {isLoading ? (
+            accounts.map((account) => (
+              <Account key={account.id} accountDetails={account} />
+            ))
+          ) : (
+            <SkeletonLoader hasProfileImg={false} rows={3} />
+          )}
           <AddAccount text="ADD ACCOUNT" />
         </div>
       </Card>
