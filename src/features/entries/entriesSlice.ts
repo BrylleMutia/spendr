@@ -218,6 +218,17 @@ const entriesSlice = createSlice({
       (state, action: PayloadAction<Entry | undefined>) => {
         if (action.payload) {
           state.entries = [action.payload, ...state.entries];
+
+          // calculate for current month totals (expense, income, and cashflow)
+          state.totals.current.expense = getTotals(state.entries, "expense");
+          state.totals.current.income = getTotals(state.entries, "income");
+          state.totals.current.cashflow = getTotals(state.entries, "cashflow");
+
+          // previous month totals
+          state.totals.prev.expense = getTotals(state.entries, "expense", 1);
+          state.totals.prev.income = getTotals(state.entries, "income", 1);
+          state.totals.prev.cashflow = getTotals(state.entries, "cashflow", 1);
+
           state.isLoading = false;
           state.error = { message: "" };
         }

@@ -98,7 +98,7 @@ const AddEntry = () => {
       onClick={openAddEntryModal}
     >
       <span className="flex h-full w-full items-center justify-center">
-        <IoAdd style={{ width: "60%", height: "60%", color: "#fff" }} />
+        <IoAdd style={{ width: "60%", height: "60%", color: "#fff", opacity: "1" }} />
       </span>
 
       <Modal isOpen={isAddEntryModalOpen} closeModal={closeAddEntryModal}>
