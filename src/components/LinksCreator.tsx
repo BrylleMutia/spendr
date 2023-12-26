@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { firebaseAuth } from "../api/fireStore";
 import { useAppDispatch } from "../app/hooks";
 import { logoutUser } from "../features/users/usersSlice";
+import { clearEntries } from "../features/entries/entriesSlice";
 
 type LinkType = {
   text: string;
@@ -22,7 +23,8 @@ export const LinksCreator = () => {
     signOut(firebaseAuth)
       .then(() => {
         // console.log("user signed out");
-        dispatch(logoutUser())
+        dispatch(logoutUser());
+        dispatch(clearEntries());
       })
       .catch((error) => {
         console.log("error", error);

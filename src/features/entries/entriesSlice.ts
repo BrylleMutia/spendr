@@ -74,7 +74,6 @@ export const addEntry = createAsyncThunk<
           // update account amount
           const accountsRef = doc(firestoreDb, "accounts", accountId);
 
-          // TODO: fix state update for updated account amount upon new record entry
           getDoc(accountsRef).then(async (accountDocData) => {
             if (accountDocData.exists()) {
               await updateDoc(accountsRef, {
@@ -185,6 +184,21 @@ const entriesSlice = createSlice({
         .add(action.payload, "M")
         .format("MMMM YYYY");
     },
+    clearEntries: (state) => {
+      state.entries = [];
+      state.totals = {
+        prev: {
+          expense: 0,
+          income: 0,
+          cashflow: 0,
+        },
+        current: {
+          expense: 0,
+          income: 0,
+          cashflow: 0,
+        },
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -250,5 +264,5 @@ const entriesSlice = createSlice({
   },
 });
 
-export const { updateMonthInView } = entriesSlice.actions;
+export const { updateMonthInView, clearEntries } = entriesSlice.actions;
 export default entriesSlice.reducer;

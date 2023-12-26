@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 
 import Card from "../../components/Card";
@@ -20,25 +20,42 @@ const HomepageContainer = () => {
   const { totals, monthInView, entries } = useAppSelector(
     (state) => state.entries,
   );
+  const [totalsPercentage, setTotalsPercentage] = useState({
+    cashflowCompPercentage: 0,
+    expenseCompPercentage: 0,
+    incomeCompPercentage: 0,
+  });
 
-  // if no records from prev month, return current total as percentage for current
-  const cashflowCompPercentage =
-    totals.prev.cashflow > 0
-      ? (totals.current.cashflow / totals.prev.cashflow) * 100
-      : totals.current.cashflow;
-  const expenseCompPercentage =
-    totals.prev.expense > 0
-      ? (totals.current.expense / totals.prev.expense) * 100
-      : totals.current.expense;
-  const incomeCompPercentage =
-    totals.prev.income > 0
-      ? (totals.current.income / totals.prev.income) * 100
-      : totals.current.income;
+  const getTotalsPercentage = () => {
+    // if no records from prev month, return current total as percentage for current
+    const cashflowCalc =
+      totals.prev.cashflow > 0
+        ? (totals.current.cashflow / totals.prev.cashflow) * 100
+        : totals.current.cashflow;
+    const expenseCalc =
+      totals.prev.expense > 0
+        ? (totals.current.expense / totals.prev.expense) * 100
+        : totals.current.expense;
+    const incomeCalc =
+      totals.prev.income > 0
+        ? (totals.current.income / totals.prev.income) * 100
+        : totals.current.income;
+
+    setTotalsPercentage({
+      cashflowCompPercentage: cashflowCalc,
+      expenseCompPercentage: expenseCalc,
+      incomeCompPercentage: incomeCalc,
+    });
+  };
 
   const dispatch = useAppDispatch();
 
   const updateMonthInViewHandler = (modifier: number) =>
     dispatch(updateMonthInView(modifier));
+
+  useEffect(() => {
+    getTotalsPercentage();
+  }, [totals]);
 
   return (
     <main className="bg-gray-background py-5">
@@ -71,17 +88,20 @@ const HomepageContainer = () => {
         </div>
 
         <div className="mt-3 flex flex-row flex-wrap justify-center gap-[0.6em]">
-          <WalletGauge label="Cash-flow %" value={cashflowCompPercentage} />
+          <WalletGauge
+            label="Cash-flow %"
+            value={totalsPercentage.cashflowCompPercentage}
+          />
         </div>
 
         <div className="mb-5 mt-8">
           <LineBarComparison
             header="Expense"
-            compPercentage={expenseCompPercentage}
+            compPercentage={totalsPercentage.expenseCompPercentage}
           />
           <LineBarComparison
             header="Income"
-            compPercentage={incomeCompPercentage}
+            compPercentage={totalsPercentage.incomeCompPercentage}
           />
 
           <div className="my-5">
