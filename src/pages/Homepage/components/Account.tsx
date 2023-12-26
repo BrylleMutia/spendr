@@ -1,4 +1,3 @@
-import React from "react";
 import type { Account } from "../../../features/accounts/accountTypes";
 import currencyFormatter from "../../../utils/currencyFormatter";
 

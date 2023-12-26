@@ -1,8 +1,7 @@
-import React from "react";
 import { Entry } from "../../../features/entries/entryTypes";
 import currencyFormatter from "../../../utils/currencyFormatter";
 import moment from "moment";
-import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import { useAppSelector } from "../../../app/hooks";
 import SkeletonLoader from "../../../components/SkeletonLoader";
 
 type RecordProps = {

@@ -1,31 +1,7 @@
-import {
-  PayloadAction,
-  createAsyncThunk,
-  createSlice,
-  isAnyOf,
-} from "@reduxjs/toolkit";
-import type {
-  InitialState,
-  User,
-  ErrorResponse,
-  authDetails,
-} from "./userTypes";
-import { firestoreDb, firebaseAuth } from "../../api/fireStore";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDocs,
-  getDoc,
-  where,
-  limit,
-  query,
-  setDoc,
-} from "firebase/firestore";
-import dateConverter from "../../utils/dateConverter";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { InitialState, User, ErrorResponse } from "./userTypes";
+import { firestoreDb } from "../../api/fireStore";
+import { doc, setDoc } from "firebase/firestore";
 
 const initialState: InitialState = {
   user: {
@@ -147,7 +123,7 @@ const usersSlice = createSlice({
       };
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: () => {
     // builder.addCase(
     //   getAllUsers.fulfilled,
     //   (state, action: PayloadAction<User[]>) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import GaugeComponent from "react-gauge-component";
 
 type WalletGaugeProps = {

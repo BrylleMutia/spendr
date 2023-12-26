@@ -18,7 +18,6 @@ import {
 } from "firebase/firestore";
 import { ErrorResponse } from "../users/userTypes";
 import dateConverter from "../../utils/dateConverter";
-import { getAllEntriesByAccountIds } from "../entries/entriesSlice";
 import { aggregateAmountByPurpose } from "../../utils/amountCalculators";
 import { Purpose } from "../entries/entryTypes";
 

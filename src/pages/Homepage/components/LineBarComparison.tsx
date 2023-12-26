@@ -1,5 +1,3 @@
-import React from "react";
-
 type LineBarComparisonProps = {
   header: string;
   compPercentage: number;

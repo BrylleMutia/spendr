@@ -16,7 +16,6 @@ import {
   limit,
   query,
   where,
-  documentId,
   updateDoc,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";

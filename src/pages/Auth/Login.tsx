@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { firebaseAuth } from "../../api/fireStore";
 import {
   signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
@@ -60,7 +58,7 @@ const Login = () => {
       });
   };
 
-  const handleGoogleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGoogleLogin = () => {
     // you can prompt your users to sign in with their Facebook accounts either by opening a pop-up window or by redirecting to the sign-in page.
     // redirect method is advised for mobile
     signInWithPopup(firebaseAuth, googleProvider)
@@ -71,7 +69,7 @@ const Login = () => {
           const token = credential.accessToken;
 
           // The signed-in user info.
-          const user = result.user;
+          // const user = result.user;
 
           // IdP data available using getAdditionalUserInfo(result)
           // ...
@@ -81,9 +79,9 @@ const Login = () => {
       })
       .catch((error) => {
         // The email of the user's account used.
-        const email = error.customData.email;
+        // const email = error.customData.email;
         // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        // const credential = GoogleAuthProvider.credentialFromError(error);
 
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -91,45 +89,43 @@ const Login = () => {
       });
   };
 
-  const handleFacebookLogin = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    // you can prompt your users to sign in with their Facebook accounts either by opening a pop-up window or by redirecting to the sign-in page.
-    // redirect method is advised for mobile
-    // TODO: Low Prio - Fix facebook login + redirect method
-    signInWithPopup(firebaseAuth, facebookProvider)
-      .then((result) => {
-        if (result) {
-          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-          const credential = FacebookAuthProvider.credentialFromResult(result);
+  const handleFacebookLogin = async () =>
+    // e: React.MouseEvent<HTMLButtonElement>,
+    {
+      // you can prompt your users to sign in with their Facebook accounts either by opening a pop-up window or by redirecting to the sign-in page.
+      // redirect method is advised for mobile
+      // TODO: Low Prio - Fix facebook login + redirect method
+      signInWithPopup(firebaseAuth, facebookProvider)
+        .then((result) => {
+          if (result) {
+            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+            const credential =
+              FacebookAuthProvider.credentialFromResult(result);
 
-          console.log("RESULT:", result);
-          console.log("CREDENTIAL:", credential);
+            console.log("RESULT:", result);
+            console.log("CREDENTIAL:", credential);
 
-          if (credential) {
-            const token = credential.accessToken;
-
-            // The signed-in user info.
-            const user = result.user;
-
-            // IdP data available using getAdditionalUserInfo(result)
-            // ...
-
-            // if (token) navigate("/");
+            if (credential) {
+              // const token = credential.accessToken;
+              // The signed-in user info.
+              // const user = result.user;
+              // IdP data available using getAdditionalUserInfo(result)
+              // ...
+              // if (token) navigate("/");
+            }
           }
-        }
-      })
-      .catch((error) => {
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
+        })
+        .catch((error) => {
+          // The email of the user's account used.
+          // const email = error.customData.email;
+          // The AuthCredential type that was used.
+          // const credential = FacebookAuthProvider.credentialFromError(error);
 
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("An error has occured: ", errorCode, errorMessage);
-      });
-  };
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("An error has occured: ", errorCode, errorMessage);
+        });
+    };
 
   return (
     <div className="flex h-[100vh] items-center">

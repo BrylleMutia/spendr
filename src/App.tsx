@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Layout from "./components/Layout";
 
@@ -9,7 +9,7 @@ import Login from "./pages/Auth/Login";
 import PasswordReset from "./pages/Auth/PasswordReset";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "./api/fireStore";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { useAppDispatch } from "./app/hooks";
 import { saveUser } from "./features/users/usersSlice";
 import { User } from "./features/users/userTypes";
 import ResetSent from "./pages/Auth/ResetSent";
@@ -18,7 +18,7 @@ import { getAllCategoriesByUserId } from "./features/categories/categoriesSlice"
 import { getAllEntriesByAccountIds } from "./features/entries/entriesSlice";
 
 function App() {
-  const { user } = useAppSelector((state) => state.users);
+  // const { user } = useAppSelector((state) => state.users);
   // const { accounts } = useAppSelector((state) => state.accounts);
 
   const dispatch = useAppDispatch();

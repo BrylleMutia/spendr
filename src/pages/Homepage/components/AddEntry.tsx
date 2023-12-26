@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import Modal from "../../../components/Modal";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -17,7 +17,6 @@ const AddEntry = () => {
   const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
 
-  const { id } = useAppSelector((state) => state.users.user);
   const { accounts } = useAppSelector((state) => state.accounts);
   const { categories } = useAppSelector((state) => state.categories);
 

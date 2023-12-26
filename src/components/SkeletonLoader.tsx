@@ -1,5 +1,3 @@
-import React from "react";
-
 type SkeletonLoaderProps = {
   hasProfileImg: boolean;
   rows: number;
