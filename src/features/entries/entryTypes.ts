@@ -31,3 +31,10 @@ export type EntryInput = {
   amount: number;
   purpose: Purpose;
 };
+
+export type EntryResponse = Entry & {
+  dateCreated: {
+    seconds: number;
+    milliseconds: number;
+  };
+};

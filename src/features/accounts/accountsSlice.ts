@@ -19,6 +19,8 @@ import {
 import { ErrorResponse } from "../users/userTypes";
 import dateConverter from "../../utils/dateConverter";
 import { getAllEntriesByAccountIds } from "../entries/entriesSlice";
+import { aggregateAmountByPurpose } from "../../utils/amountCalculators";
+import { Purpose } from "../entries/entryTypes";
 
 const initialState: InitialState = {
   accounts: [],
@@ -137,7 +139,33 @@ export const addNewAccount = createAsyncThunk<
 const accountsSlice = createSlice({
   name: "accounts",
   initialState,
-  reducers: {},
+  reducers: {
+    updateAccountAmount: (
+      state,
+      action: PayloadAction<{
+        accountId: string;
+        amount: number;
+        purpose: Purpose;
+      }>,
+    ) => {
+      const { accountId, amount, purpose } = action.payload;
+
+      if (action.payload.accountId) {
+        let accountToUpdate = state.accounts.find(
+          (account) => account.id === accountId,
+        );
+
+        if (accountToUpdate?.amount && purpose) {
+          accountToUpdate.amount += aggregateAmountByPurpose(purpose, amount);
+
+          state.accounts = [
+            accountToUpdate,
+            ...state.accounts.filter((account) => accountId != account.id),
+          ];
+        }
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(
       addNewAccount.fulfilled,
@@ -189,4 +217,5 @@ const accountsSlice = createSlice({
   },
 });
 
+export const { updateAccountAmount } = accountsSlice.actions;
 export default accountsSlice.reducer;

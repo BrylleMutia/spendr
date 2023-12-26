@@ -4,7 +4,7 @@ import {
   createSlice,
   isAnyOf,
 } from "@reduxjs/toolkit";
-import { Entry, EntryInput, InitialState } from "./entryTypes";
+import { Entry, EntryInput, EntryResponse, InitialState } from "./entryTypes";
 import { ErrorResponse } from "../users/userTypes";
 import {
   addDoc,
@@ -20,11 +20,12 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
-import dateConverter, {
-  currentDateMonthYear,
-  dateConvertMonthYear,
-} from "../../utils/dateConverter";
 import moment from "moment";
+import {
+  aggregateAmountByPurpose,
+  getTotals,
+} from "../../utils/amountCalculators";
+import dateConverter from "../../utils/dateConverter";
 
 const initialState: InitialState = {
   entries: [],
@@ -67,32 +68,31 @@ export const addEntry = createAsyncThunk<
       return getDoc(docRef).then((entryDocData) => {
         if (entryDocData.exists()) {
           console.log("Add entry triggered!", entryDocData.data());
+          const { accountId, amount, categoryId, dateCreated, purpose, note } =
+            entryDocData.data() as EntryResponse;
 
           // update account amount
-          const accountsRef = doc(
-            firestoreDb,
-            "accounts",
-            entryDocData.data().accountId,
-          );
+          const accountsRef = doc(firestoreDb, "accounts", accountId);
 
           // TODO: fix state update for updated account amount upon new record entry
           getDoc(accountsRef).then(async (accountDocData) => {
             if (accountDocData.exists()) {
               await updateDoc(accountsRef, {
                 amount:
-                  accountDocData.data().amount + entryDocData.data().amount,
+                  accountDocData.data().amount +
+                  aggregateAmountByPurpose(purpose, amount),
               });
             }
           });
 
           return {
             id: entryDocData.id,
-            categoryId: entryDocData.data().categoryId,
-            dateCreated: dateConverter(entryDocData.data().dateCreated.seconds),
-            accountId: entryDocData.data().accountId,
-            note: entryDocData.data().note,
-            amount: entryDocData.data().amount,
-            purpose: entryDocData.data().purpose,
+            categoryId,
+            dateCreated: dateConverter(dateCreated.seconds),
+            accountId,
+            note,
+            amount,
+            purpose,
           };
         }
       });
@@ -174,43 +174,6 @@ export const getAllEntriesByAccountIds = createAsyncThunk<
     return thunkAPI.rejectWithValue({ message: err as string });
   }
 });
-
-// helper functions
-const getTotals = (
-  entriesPayload: Entry[],
-  mode: "expense" | "income" | "cashflow",
-  monthModifier?: number,
-) =>
-  /**
-   * Function used to get total expense, income, and cashflow in specified month with relation to current month (month modifier)
-   *
-   * @param   entriesPayload    all entries from state
-   * @param   mode              total to be calculated
-   * @param   monthModifier     how many months back to get with relation to current month (ex. 1 would be current month - 1 month)
-   *
-   * @return  total
-   */
-
-  entriesPayload.reduce((sum, current) => {
-    if (
-      dateConvertMonthYear(current.dateCreated) ===
-      currentDateMonthYear(monthModifier)
-    ) {
-      if (
-        current.purpose === "expense" &&
-        (mode === current.purpose || mode === "cashflow")
-      ) {
-        return sum - current.amount;
-      } else if (
-        current.purpose === "income" &&
-        (mode === current.purpose || mode === "cashflow")
-      ) {
-        return sum + current.amount;
-      } else {
-        return sum;
-      }
-    } else return sum;
-  }, 0);
 
 // slice
 const entriesSlice = createSlice({

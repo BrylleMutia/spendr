@@ -6,6 +6,7 @@ import { addEntry } from "../../../features/entries/entriesSlice";
 import { EntryInput, Purpose } from "../../../features/entries/entryTypes";
 import { IoMdAddCircle } from "react-icons/io";
 import AddCategory from "./AddCategory";
+import { updateAccountAmount } from "../../../features/accounts/accountsSlice";
 
 const AddEntry = () => {
   const [amount, setAmount] = useState<number | undefined>(undefined);
@@ -50,7 +51,18 @@ const AddEntry = () => {
         purpose,
       };
 
-      dispatch(addEntry(newEntryDetails));
+      dispatch(addEntry(newEntryDetails))
+        .unwrap()
+        .then(() =>
+          // update account amount
+          dispatch(
+            updateAccountAmount({
+              accountId: selectedAccountId,
+              amount,
+              purpose,
+            }),
+          ),
+        );
       closeAddEntryModal(e);
 
       setPurpose("expense");
