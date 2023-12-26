@@ -67,7 +67,7 @@ const HomepageContainer = () => {
         </div>
 
         <div className="mt-3 flex flex-wrap gap-[0.6em]">
-          {isLoading ? (
+          {!isLoading ? (
             accounts.map((account) => (
               <Account key={account.id} accountDetails={account} />
             ))

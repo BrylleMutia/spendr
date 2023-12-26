@@ -36,7 +36,7 @@ const Record = ({ entryDetails }: RecordProps) => {
       );
   };
 
-  return isLoading ? (
+  return !isLoading ? (
     <div className="flex">
       <div className="mr-3 flex items-center justify-center rounded-full bg-blue-primary">
         <img
