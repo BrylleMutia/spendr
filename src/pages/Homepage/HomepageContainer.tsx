@@ -10,7 +10,7 @@ import UsersPage from "../UsersPage";
 import LineBarComparison from "./components/LineBarComparison";
 import ComparisonLegend from "./components/ComparisonLegend";
 import ArrowSelector from "./components/ArrowSelector";
-import { updateMonthInView } from "../../features/entries/entriesSlice";
+import { updateMonthInView, updateMonthInViewToCurrDate } from "../../features/entries/entriesSlice";
 import Record from "./components/Record";
 import moment from "moment";
 import AddEntry from "./components/AddEntry";
@@ -57,6 +57,10 @@ const HomepageContainer = () => {
   useEffect(() => {
     getTotalsPercentage();
   }, [totals]);
+
+  useEffect(() => {
+    dispatch(updateMonthInViewToCurrDate());
+  }, [dispatch, totals]);
 
   return (
     <main className="bg-gray-background py-5">

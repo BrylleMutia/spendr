@@ -183,6 +183,9 @@ const entriesSlice = createSlice({
         .add(action.payload, "M")
         .format("MMMM YYYY");
     },
+    updateMonthInViewToCurrDate: (state) => {
+      state.monthInView = moment().format("MMMM YYYY");
+    },
     clearEntries: (state) => {
       state.entries = [];
       state.totals = {
@@ -216,11 +219,11 @@ const entriesSlice = createSlice({
         state.totals.prev.cashflow = getTotals(action.payload, "cashflow", 1);
 
         // get latest month to display in mmmm yyyy format
-        state.monthInView = moment(
-          action.payload.sort((a, b) =>
-            a.dateCreated > b.dateCreated ? -1 : 1,
-          )[0].dateCreated,
-        ).format("MMMM YYYY");
+        // state.monthInView = moment(
+        //   action.payload.sort((a, b) =>
+        //     a.dateCreated > b.dateCreated ? -1 : 1,
+        //   )[0].dateCreated,
+        // ).format("MMMM YYYY");
 
         state.isLoading = false;
         state.error = { message: "" };
@@ -263,5 +266,6 @@ const entriesSlice = createSlice({
   },
 });
 
-export const { updateMonthInView, clearEntries } = entriesSlice.actions;
+export const { updateMonthInView, updateMonthInViewToCurrDate, clearEntries } =
+  entriesSlice.actions;
 export default entriesSlice.reducer;

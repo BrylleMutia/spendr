@@ -3,7 +3,6 @@ type SkeletonLoaderProps = {
   rows: number;
 };
 
-// TODO: NEXT - Apply skeleton loaders
 const SkeletonLoader = ({ hasProfileImg, rows }: SkeletonLoaderProps) => {
   return (
     <div className="mx-auto w-full max-w-sm rounded-md border p-2">
