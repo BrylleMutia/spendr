@@ -30,8 +30,8 @@ const AddEntry = () => {
   const handleChangeAccount = (e: React.FormEvent<HTMLSelectElement>) => {
     setSelectedAccount(e.currentTarget.value);
   };
-  const handleChangePurpose = (e: React.FormEvent<HTMLSelectElement>) => {
-    setPurpose(e.currentTarget.value as Purpose);
+  const handleChangePurpose = (newPurpose: Purpose) => {
+    setPurpose(newPurpose);
   };
   const handleChangeNote = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNote(e.target.value);
@@ -88,7 +88,8 @@ const AddEntry = () => {
     setIsAddEntryModalOpen(false);
   };
 
-  // TODO: NEXT - Fix design for modals
+  // TODO: NEXT - New modal for choose account / category
+  // TODO: NEXT - Calculator layout for new entry
   // TODO: Implement transfer
   // TODO: Add toast notifications
   // TODO: Improved category UI
@@ -104,27 +105,81 @@ const AddEntry = () => {
       </span>
 
       <Modal isOpen={isAddEntryModalOpen} closeModal={closeAddEntryModal}>
-        <h3 className="font-semibold">Add entry</h3>
+        <div className="w-full px-4 py-3">
+          <h3 className="text-sm font-semibold">Add entry</h3>
+        </div>
+
+        <hr />
+
+        <div className="flex w-full bg-blue-secondary">
+          <button
+            className={`z-10 basis-1/2 py-2 text-sm font-bold text-white shadow-md ${
+              purpose === "income" && "bg-blue-primary"
+            }`}
+            onClick={() => handleChangePurpose("income")}
+          >
+            INCOME
+          </button>
+          <button
+            className={`z-10 basis-1/2 py-3 text-sm font-bold text-white shadow-md ${
+              purpose === "expense" && "bg-blue-primary"
+            }`}
+            onClick={() => handleChangePurpose("expense")}
+          >
+            EXPENSE
+          </button>
+        </div>
 
         <form
           action="POST"
-          className="mt-5 flex flex-col gap-2"
+          className="flex flex-col bg-blue-primary"
           onSubmit={handleAddNewEntry}
         >
-          <label htmlFor="account-name" hidden>
-            Amount
-          </label>
-          <input
-            type="number"
-            id="amount"
-            placeholder="Amount"
-            className="input-text-primary"
-            value={amount}
-            onChange={handleChangeAmount}
-            required
-          />
+          <div className="flex items-end px-5 pb-5 pt-9 text-white">
+            <span className="w-[0.7em] self-center text-[3em] tracking-tighter">
+              {purpose === "income" ? "+" : "-"}
+            </span>
+            <input
+              type="number"
+              id="amount"
+              className="custom-placeholder max-w-[3.5em] bg-inherit text-right text-[4em] font-bold outline-none"
+              contentEditable
+              value={amount}
+              onChange={handleChangeAmount}
+              placeholder="0"
+            />
+            <label htmlFor="amount" className="ml-5 pb-4 text-[1rem]">
+              PHP
+            </label>
+          </div>
 
-          <label htmlFor="category" hidden>
+          <div className="flex py-3">
+            <div className="flex basis-1/2 flex-col text-center">
+              <label htmlFor="account" className="text-xs text-gray-text-2">
+                Account
+              </label>
+              <button id="account" className="font-semibold text-white">
+                {
+                  accounts.find((account) => account.id === selectedAccountId)
+                    ?.name
+                }
+              </button>
+            </div>
+            <div className="flex basis-1/2 flex-col text-center">
+              <label htmlFor="category" className="text-xs text-gray-text-2">
+                Category
+              </label>
+              <button id="category" className="font-semibold text-white">
+                {
+                  categories.find(
+                    (category) => category.id === selectedCategoryId,
+                  )?.name
+                }
+              </button>
+            </div>
+          </div>
+
+          {/* <label htmlFor="category" hidden>
             Category
           </label>
           <select
@@ -162,37 +217,46 @@ const AddEntry = () => {
             {accounts.map((account) => (
               <option value={account.id}>{account.name}</option>
             ))}
-          </select>
+          </select> */}
 
-          <label htmlFor="purpose" hidden>
-            Purpose
-          </label>
-          <select
-            name="purpose"
-            id="purpose"
-            value={purpose}
-            className="input-text-primary bg-white"
-            onChange={handleChangePurpose}
-            required
-          >
-            <option value="expense" selected>
-              Expense
-            </option>
-            <option value="income">Income</option>
-            <option value="transfer">Transfer</option>
-          </select>
+          <div className="flex w-full justify-center">
+            <label htmlFor="account-name" hidden>
+              Note
+            </label>
+            <input
+              type="text"
+              id="note"
+              placeholder="Notes"
+              className="input-text-primary text-gray-text-2"
+              value={note}
+              onChange={handleChangeNote}
+            />
+          </div>
 
-          <label htmlFor="account-name" hidden>
-            Note
-          </label>
-          <input
-            type="text"
-            id="note"
-            placeholder="Notes"
-            className="input-text-primary"
-            value={note}
-            onChange={handleChangeNote}
-          />
+          <div className="grid grid-cols-4 place-content-around bg-white px-5">
+            {/* <div className="grid-rows-subgrid row-span-3 grid grid-rows-5"> */}
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>8</div>
+            <div>9</div>
+            <div>0</div>
+            <div>{"<"}</div>
+            <div>.</div>
+            {/* </div> */}
+            <div className="grid-rows-subgrid grid grid-rows-5 col-end-5 col-span-1 row-start-1">
+              <div className="bg-gray-text-1">+</div>
+              <div className="bg-gray-text-1">-</div>
+              <div className="bg-gray-text-1">/</div>
+              <div className="bg-gray-text-1">*</div>
+              <div className="bg-gray-text-1">{"="}</div>
+            </div>
+          </div>
+
           <button
             type="submit"
             className="btn-logo-accent mt-3"
