@@ -8,6 +8,9 @@ import { IoMdAddCircle } from "react-icons/io";
 import AddCategory from "./AddCategory";
 import { updateAccountAmount } from "../../../features/accounts/accountsSlice";
 
+import { IoCloseSharp } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+
 const AddEntry = () => {
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [selectedCategoryId, setSelectedCategory] = useState("");
@@ -21,6 +24,19 @@ const AddEntry = () => {
   const { categories } = useAppSelector((state) => state.categories);
 
   const dispatch = useAppDispatch();
+
+  const handleChangeAmountViaCalculator = (value: number) => {
+    if (amount) {
+      setAmount((prev) => Number(`${prev}${value}`));
+    } else setAmount(value);
+  };
+  const handleDeleteAmountViaCalculator = () => {
+    if (amount) {
+      setAmount((prev) =>
+        Number(`${prev}`.substring(0, String(prev).length - 1)),
+      );
+    } else return;
+  };
 
   const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) =>
     setAmount(Number(e.target.value));
@@ -89,7 +105,7 @@ const AddEntry = () => {
   };
 
   // TODO: NEXT - New modal for choose account / category
-  // TODO: NEXT - Calculator layout for new entry
+  // TODO: NEXT - Add decimal + operators to calculator
   // TODO: Implement transfer
   // TODO: Add toast notifications
   // TODO: Improved category UI
@@ -132,7 +148,7 @@ const AddEntry = () => {
 
         <form
           action="POST"
-          className="flex flex-col bg-blue-primary"
+          className="flex flex-col rounded-b-lg bg-blue-primary"
           onSubmit={handleAddNewEntry}
         >
           <div className="flex items-end px-5 pb-5 pt-9 text-white">
@@ -147,6 +163,7 @@ const AddEntry = () => {
               value={amount}
               onChange={handleChangeAmount}
               placeholder="0"
+              autoFocus
             />
             <label htmlFor="amount" className="ml-5 pb-4 text-[1rem]">
               PHP
@@ -219,7 +236,7 @@ const AddEntry = () => {
             ))}
           </select> */}
 
-          <div className="flex w-full justify-center">
+          <div className="mb-4 flex w-full justify-center">
             <label htmlFor="account-name" hidden>
               Note
             </label>
@@ -233,38 +250,103 @@ const AddEntry = () => {
             />
           </div>
 
-          <div className="grid grid-cols-4 place-content-around bg-white px-5">
+          <div className="grid grid-cols-4 grid-rows-4 place-content-around bg-white px-5 text-center text-2xl font-light text-gray-text-2">
             {/* <div className="grid-rows-subgrid row-span-3 grid grid-rows-5"> */}
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
-            <div>5</div>
-            <div>6</div>
-            <div>7</div>
-            <div>8</div>
-            <div>9</div>
-            <div>0</div>
-            <div>{"<"}</div>
-            <div>.</div>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(1)}
+            >
+              1
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(2)}
+            >
+              2
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(3)}
+            >
+              3
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(4)}
+            >
+              4
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(5)}
+            >
+              5
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(6)}
+            >
+              6
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(7)}
+            >
+              7
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(8)}
+            >
+              8
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(9)}
+            >
+              9
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(1)}
+            >
+              .
+            </button>
+            <button
+              className="p-4"
+              onClick={() => handleChangeAmountViaCalculator(0)}
+            >
+              0
+            </button>
+            <button className="p-4" onClick={handleDeleteAmountViaCalculator}>
+              {"<"}
+            </button>
             {/* </div> */}
-            <div className="grid-rows-subgrid grid grid-rows-5 col-end-5 col-span-1 row-start-1">
-              <div className="bg-gray-text-1">+</div>
-              <div className="bg-gray-text-1">-</div>
-              <div className="bg-gray-text-1">/</div>
-              <div className="bg-gray-text-1">*</div>
-              <div className="bg-gray-text-1">{"="}</div>
+            <div className="grid-rows-subgrid col-span-1 col-end-5 row-span-4 row-start-1 grid grid-rows-5">
+              <button className="bg-gray-text-1 p-2">+</button>
+              <button className="bg-gray-text-1 p-2">-</button>
+              <button className="bg-gray-text-1 p-2">/</button>
+              <button className="bg-gray-text-1 p-2">*</button>
+              <button className="bg-gray-text-1 p-2">{"="}</button>
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="btn-logo-accent mt-3"
-            onClick={handleAddNewEntry}
-          >
-            <IoMdAddCircle />
-            <span>Add entry</span>
-          </button>
+          <div className="mt-4 flex">
+            <button
+              type="submit"
+              className="btn-logo-accent grow rounded-none rounded-bl-md bg-gray-text-1 py-3"
+              onClick={closeAddEntryModal}
+            >
+              <IoCloseSharp />
+            </button>
+            <button
+              type="submit"
+              className="btn-logo-accent grow rounded-none rounded-br-md"
+              onClick={handleAddNewEntry}
+            >
+              <FaCheck />
+            </button>
+          </div>
         </form>
       </Modal>
 
