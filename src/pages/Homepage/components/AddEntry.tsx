@@ -12,7 +12,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 
 const AddEntry = () => {
-  const [amount, setAmount] = useState<number | undefined>(undefined);
+  const [amount, setAmount] = useState<string | undefined>(undefined);
   const [selectedCategoryId, setSelectedCategory] = useState("");
   const [selectedAccountId, setSelectedAccount] = useState("");
   const [purpose, setPurpose] = useState<Purpose>("expense");
@@ -25,21 +25,37 @@ const AddEntry = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleChangeAmountViaCalculator = (value: number) => {
+  const handleChangeAmountViaCalculator = (value: string) => {
     if (amount) {
-      setAmount((prev) => Number(`${prev}${value}`));
-    } else setAmount(value);
+      setAmount((prev) => {
+        if (prev) {
+          // for handling decimal values
+          const prev_split = prev.split(".");
+
+          if (prev_split?.length > 1) {
+            if (prev_split[1] === "0") {
+              return `${prev_split[0]}.${value}`;
+            } else return `${prev}${value}`;
+          } else return `${prev}${value}`;
+        }
+      });
+    } else {
+      return setAmount(value);
+    }
+  };
+  const handleChangeAmountToDecimal = () => {
+    if (amount) {
+      setAmount((prev) => String(Number.parseFloat(String(prev)).toFixed(1)));
+    }
   };
   const handleDeleteAmountViaCalculator = () => {
     if (amount) {
-      setAmount((prev) =>
-        Number(`${prev}`.substring(0, String(prev).length - 1)),
-      );
+      setAmount((prev) => `${prev}`.substring(0, String(prev).length - 1));
     } else return;
   };
 
   const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setAmount(Number(e.target.value));
+    setAmount(e.target.value);
   const handleChangeCategory = (e: React.FormEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.currentTarget.value);
   };
@@ -62,7 +78,7 @@ const AddEntry = () => {
         categoryId: selectedCategoryId,
         accountId: selectedAccountId,
         note,
-        amount,
+        amount: Number.parseFloat(amount),
         purpose,
       };
 
@@ -73,7 +89,7 @@ const AddEntry = () => {
           dispatch(
             updateAccountAmount({
               accountId: selectedAccountId,
-              amount,
+              amount: Number.parseFloat(amount),
               purpose,
             }),
           ),
@@ -164,6 +180,7 @@ const AddEntry = () => {
               onChange={handleChangeAmount}
               placeholder="0"
               autoFocus
+              disabled
             />
             <label htmlFor="amount" className="ml-5 pb-4 text-[1rem]">
               PHP
@@ -254,67 +271,64 @@ const AddEntry = () => {
             {/* <div className="grid-rows-subgrid row-span-3 grid grid-rows-5"> */}
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(1)}
+              onClick={() => handleChangeAmountViaCalculator("1")}
             >
               1
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(2)}
+              onClick={() => handleChangeAmountViaCalculator("2")}
             >
               2
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(3)}
+              onClick={() => handleChangeAmountViaCalculator("3")}
             >
               3
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(4)}
+              onClick={() => handleChangeAmountViaCalculator("4")}
             >
               4
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(5)}
+              onClick={() => handleChangeAmountViaCalculator("5")}
             >
               5
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(6)}
+              onClick={() => handleChangeAmountViaCalculator("6")}
             >
               6
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(7)}
+              onClick={() => handleChangeAmountViaCalculator("7")}
             >
               7
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(8)}
+              onClick={() => handleChangeAmountViaCalculator("8")}
             >
               8
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(9)}
+              onClick={() => handleChangeAmountViaCalculator("9")}
             >
               9
             </button>
-            <button
-              className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(1)}
-            >
+            <button className="p-4" onClick={handleChangeAmountToDecimal}>
               .
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator(0)}
+              onClick={() => handleChangeAmountViaCalculator("0")}
             >
               0
             </button>
