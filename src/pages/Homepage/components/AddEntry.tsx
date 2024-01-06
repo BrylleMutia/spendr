@@ -43,6 +43,20 @@ const AddEntry = () => {
       return setAmount(value);
     }
   };
+  const handleAmountOperation = (operator: string) => {
+    if (amount) {
+      setAmount((prev) => {
+        if (prev) {
+          // execute operation string, otherwise add operator to string
+          if (operator === "=") return String(eval(prev));
+
+          return `${prev}${operator}`;
+        }
+      });
+    }
+  };
+
+  // TODO: FIX - Decimal conversion with operators in string
   const handleChangeAmountToDecimal = () => {
     if (amount) {
       setAmount((prev) => String(Number.parseFloat(String(prev)).toFixed(1)));
@@ -121,7 +135,6 @@ const AddEntry = () => {
   };
 
   // TODO: NEXT - New modal for choose account / category
-  // TODO: NEXT - Add decimal + operators to calculator
   // TODO: Implement transfer
   // TODO: Add toast notifications
   // TODO: Improved category UI
@@ -172,7 +185,7 @@ const AddEntry = () => {
               {purpose === "income" ? "+" : "-"}
             </span>
             <input
-              type="number"
+              type="text"
               id="amount"
               className="custom-placeholder max-w-[3.5em] bg-inherit text-right text-[4em] font-bold outline-none"
               contentEditable
@@ -337,11 +350,36 @@ const AddEntry = () => {
             </button>
             {/* </div> */}
             <div className="grid-rows-subgrid col-span-1 col-end-5 row-span-4 row-start-1 grid grid-rows-5">
-              <button className="bg-gray-text-1 p-2">+</button>
-              <button className="bg-gray-text-1 p-2">-</button>
-              <button className="bg-gray-text-1 p-2">/</button>
-              <button className="bg-gray-text-1 p-2">*</button>
-              <button className="bg-gray-text-1 p-2">{"="}</button>
+              <button
+                className="bg-gray-text-1 p-2"
+                onClick={() => handleAmountOperation("+")}
+              >
+                +
+              </button>
+              <button
+                className="bg-gray-text-1 p-2"
+                onClick={() => handleAmountOperation("-")}
+              >
+                -
+              </button>
+              <button
+                className="bg-gray-text-1 p-2"
+                onClick={() => handleAmountOperation("/")}
+              >
+                /
+              </button>
+              <button
+                className="bg-gray-text-1 p-2"
+                onClick={() => handleAmountOperation("*")}
+              >
+                *
+              </button>
+              <button
+                className="bg-gray-text-1 p-2"
+                onClick={() => handleAmountOperation("=")}
+              >
+                {"="}
+              </button>
             </div>
           </div>
 
