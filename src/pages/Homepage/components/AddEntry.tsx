@@ -4,12 +4,12 @@ import Modal from "../../../components/Modal";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { addEntry } from "../../../features/entries/entriesSlice";
 import { EntryInput, Purpose } from "../../../features/entries/entryTypes";
-import { IoMdAddCircle } from "react-icons/io";
-import AddCategory from "./AddCategory";
 import { updateAccountAmount } from "../../../features/accounts/accountsSlice";
 
 import { IoCloseSharp } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
+import CategoryModal from "./CategoryModal";
+import AccountModal from "./AccountModal";
 
 const AddEntry = () => {
   const [amount, setAmount] = useState<string | undefined>(undefined);
@@ -18,14 +18,20 @@ const AddEntry = () => {
   const [purpose, setPurpose] = useState<Purpose>("expense");
   const [note, setNote] = useState("");
   const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
-  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
   const { accounts } = useAppSelector((state) => state.accounts);
   const { categories } = useAppSelector((state) => state.categories);
 
   const dispatch = useAppDispatch();
 
-  const handleChangeAmountViaCalculator = (value: string) => {
+  const handleChangeAmountViaCalculator = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    value: string,
+  ) => {
+    e.stopPropagation();
+
     if (amount) {
       setAmount((prev) => {
         if (prev) {
@@ -43,7 +49,12 @@ const AddEntry = () => {
       return setAmount(value);
     }
   };
-  const handleAmountOperation = (operator: string) => {
+  const handleAmountOperation = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    operator: string,
+  ) => {
+    e.stopPropagation();
+
     if (amount) {
       setAmount((prev) => {
         if (prev) {
@@ -57,7 +68,11 @@ const AddEntry = () => {
   };
 
   // TODO: FIX - Decimal conversion with operators in string
-  const handleChangeAmountToDecimal = () => {
+  const handleChangeAmountToDecimal = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.stopPropagation();
+
     if (amount) {
       setAmount((prev) => String(Number.parseFloat(String(prev)).toFixed(1)));
     }
@@ -68,13 +83,16 @@ const AddEntry = () => {
     } else return;
   };
 
+  // handlers for new entry input value change
   const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) =>
     setAmount(e.target.value);
-  const handleChangeCategory = (e: React.FormEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.currentTarget.value);
+  const handleSelectCategory = (categoryid: string) => {
+    setSelectedCategory(categoryid);
+    setIsCategoryModalOpen(false);
   };
-  const handleChangeAccount = (e: React.FormEvent<HTMLSelectElement>) => {
-    setSelectedAccount(e.currentTarget.value);
+  const handleSelectAccount = (accountid: string) => {
+    setSelectedAccount(accountid);
+    setIsAccountModalOpen(false);
   };
   const handleChangePurpose = (newPurpose: Purpose) => {
     setPurpose(newPurpose);
@@ -118,12 +136,22 @@ const AddEntry = () => {
     }
   };
 
-  const handleOpenCategoryModal = () => setIsAddCategoryModalOpen(true);
-  const closeAddCategoryModal = (
+  // modal for choosing category on new entry
+  const handleOpenCategoryModal = () => setIsCategoryModalOpen(true);
+  const closeCategoryModal = (
     e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
   ) => {
     e.stopPropagation(); // stop event propagation to parent from modal portal component
-    setIsAddCategoryModalOpen(false);
+    setIsCategoryModalOpen(false);
+  };
+
+  // modal for choosing account on new entry
+  const handleOpenAccountModal = () => setIsAccountModalOpen(true);
+  const closeAccountModal = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
+    e.stopPropagation(); // stop event propagation to parent from modal portal component
+    setIsAccountModalOpen(false);
   };
 
   const openAddEntryModal = () => setIsAddEntryModalOpen(true);
@@ -202,69 +230,39 @@ const AddEntry = () => {
 
           <div className="flex py-3">
             <div className="flex basis-1/2 flex-col text-center">
-              <label htmlFor="account" className="text-xs text-gray-text-2">
-                Account
-              </label>
-              <button id="account" className="font-semibold text-white">
-                {
-                  accounts.find((account) => account.id === selectedAccountId)
-                    ?.name
-                }
+              <button
+                id="account"
+                className="text-white"
+                onClick={handleOpenAccountModal}
+              >
+                <span className="text-xs text-gray-text-2">Account</span>
+                <br />
+                <span className="text-sm">
+                  {
+                    accounts.find((account) => account.id === selectedAccountId)
+                      ?.name
+                  }
+                </span>
               </button>
             </div>
             <div className="flex basis-1/2 flex-col text-center">
-              <label htmlFor="category" className="text-xs text-gray-text-2">
-                Category
-              </label>
-              <button id="category" className="font-semibold text-white">
-                {
-                  categories.find(
-                    (category) => category.id === selectedCategoryId,
-                  )?.name
-                }
+              <button
+                id="category"
+                className="text-white"
+                onClick={handleOpenCategoryModal}
+              >
+                <span className="text-xs text-gray-text-2">Category</span>
+                <br />
+                <span className="text-sm">
+                  {
+                    categories.find(
+                      (category) => category.id === selectedCategoryId,
+                    )?.name
+                  }
+                </span>
               </button>
             </div>
           </div>
-
-          {/* <label htmlFor="category" hidden>
-            Category
-          </label>
-          <select
-            name="category"
-            id="category"
-            value={selectedCategoryId}
-            onChange={handleChangeCategory}
-            onLoad={handleChangeCategory}
-            className="input-text-primary bg-white"
-            required
-          >
-            <option value="" disabled selected className="">
-              Category
-            </option>
-            {categories.map((category) => (
-              <option value={category.id}>{category.name}</option>
-            ))}
-            <option onClick={handleOpenCategoryModal}>New category</option>
-          </select>
-
-          <label htmlFor="account" hidden>
-            Account
-          </label>
-          <select
-            name="account"
-            id="account"
-            value={selectedAccountId}
-            className="input-text-primary bg-white"
-            onChange={handleChangeAccount}
-            required
-          >
-            <option value="" disabled selected>
-              Account
-            </option>
-            {accounts.map((account) => (
-              <option value={account.id}>{account.name}</option>
-            ))}
-          </select> */}
 
           <div className="mb-4 flex w-full justify-center">
             <label htmlFor="account-name" hidden>
@@ -284,55 +282,55 @@ const AddEntry = () => {
             {/* <div className="grid-rows-subgrid row-span-3 grid grid-rows-5"> */}
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("1")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "1")}
             >
               1
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("2")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "2")}
             >
               2
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("3")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "3")}
             >
               3
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("4")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "4")}
             >
               4
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("5")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "5")}
             >
               5
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("6")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "6")}
             >
               6
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("7")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "7")}
             >
               7
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("8")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "8")}
             >
               8
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("9")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "9")}
             >
               9
             </button>
@@ -341,7 +339,7 @@ const AddEntry = () => {
             </button>
             <button
               className="p-4"
-              onClick={() => handleChangeAmountViaCalculator("0")}
+              onClick={(e) => handleChangeAmountViaCalculator(e, "0")}
             >
               0
             </button>
@@ -352,31 +350,31 @@ const AddEntry = () => {
             <div className="grid-rows-subgrid col-span-1 col-end-5 row-span-4 row-start-1 grid grid-rows-5">
               <button
                 className="bg-gray-text-1 p-2"
-                onClick={() => handleAmountOperation("+")}
+                onClick={(e) => handleAmountOperation(e, "+")}
               >
                 +
               </button>
               <button
                 className="bg-gray-text-1 p-2"
-                onClick={() => handleAmountOperation("-")}
+                onClick={(e) => handleAmountOperation(e, "-")}
               >
                 -
               </button>
               <button
                 className="bg-gray-text-1 p-2"
-                onClick={() => handleAmountOperation("/")}
+                onClick={(e) => handleAmountOperation(e, "/")}
               >
                 /
               </button>
               <button
                 className="bg-gray-text-1 p-2"
-                onClick={() => handleAmountOperation("*")}
+                onClick={(e) => handleAmountOperation(e, "*")}
               >
                 *
               </button>
               <button
                 className="bg-gray-text-1 p-2"
-                onClick={() => handleAmountOperation("=")}
+                onClick={(e) => handleAmountOperation(e, "=")}
               >
                 {"="}
               </button>
@@ -402,9 +400,16 @@ const AddEntry = () => {
         </form>
       </Modal>
 
-      <AddCategory
-        isOpen={isAddCategoryModalOpen}
-        handleCloseModal={closeAddCategoryModal}
+      <CategoryModal
+        isOpen={isCategoryModalOpen}
+        closeModal={closeCategoryModal}
+        handleSelectCategory={handleSelectCategory}
+      />
+
+      <AccountModal
+        isOpen={isAccountModalOpen}
+        closeModal={closeAccountModal}
+        handleSelectAccount={handleSelectAccount}
       />
     </button>
   );
