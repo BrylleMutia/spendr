@@ -17,6 +17,7 @@ import {
   query,
   where,
   updateDoc,
+  orderBy,
 } from "firebase/firestore";
 import { firestoreDb } from "../../api/fireStore";
 import moment from "moment";
@@ -206,8 +207,10 @@ const entriesSlice = createSlice({
     builder.addCase(
       getAllEntriesByAccountIds.fulfilled,
       (state, action: PayloadAction<Entry[]>) => {
-        state.entries = action.payload;
-
+        state.entries = action.payload.sort((a, b) =>
+          a.dateCreated > b.dateCreated ? -1 : 1,
+        );
+        
         // calculate for current month totals (expense, income, and cashflow)
         state.totals.current.expense = getTotals(action.payload, "expense");
         state.totals.current.income = getTotals(action.payload, "income");
