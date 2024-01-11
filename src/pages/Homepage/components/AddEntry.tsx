@@ -59,7 +59,7 @@ const AddEntry = () => {
       setAmount((prev) => {
         if (prev) {
           // execute operation string, otherwise add operator to string
-          if (operator === "=") return String(eval(prev));
+          if (operator === "=") return String(Math.abs(eval(prev)));
 
           return `${prev}${operator}`;
         }
@@ -103,6 +103,7 @@ const AddEntry = () => {
   const handleAddNewEntry = (
     e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
   ) => {
+    e.stopPropagation();
     e.preventDefault();
 
     if (purpose && amount && selectedAccountId && selectedCategoryId) {
@@ -162,10 +163,12 @@ const AddEntry = () => {
     setIsAddEntryModalOpen(false);
   };
 
-  // TODO: NEXT - New modal for choose account / category
+  // TODO: NEXT - Enhance design on category and account modal / Close modal when clicked outside
+  // TODO: NEXT - Add toast notifications for new entry, etc.
+  // TODO: NEXT - Fix event propagation when selected account or category then input amount causes modal close
   // TODO: Implement transfer
-  // TODO: Add toast notifications
   // TODO: Improved category UI
+
   return (
     <button
       className="fixed bottom-10 right-7 h-[3.5em] w-[3.5em] rounded-full bg-blue-accent"
