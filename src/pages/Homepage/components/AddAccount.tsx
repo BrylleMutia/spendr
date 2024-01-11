@@ -27,6 +27,7 @@ const AddAccount = ({ text }: AddAccountProps) => {
   const handleAddNewAccount = (
     e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
   ) => {
+    e.stopPropagation();
     e.preventDefault();
 
     if (accountName) {
@@ -43,7 +44,11 @@ const AddAccount = ({ text }: AddAccountProps) => {
     }
   };
 
-  const openAddAccountModal = () => setIsAddAccountModalOpen(true);
+  const openAddAccountModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); // stop event propagation to parent from modal portal component
+    setIsAddAccountModalOpen(true);
+  };
+
   const closeAddAccountModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // stop event propagation to parent from modal portal component
     setIsAddAccountModalOpen(false);

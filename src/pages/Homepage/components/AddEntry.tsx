@@ -30,7 +30,7 @@ const AddEntry = () => {
     e: React.MouseEvent<HTMLButtonElement>,
     value: string,
   ) => {
-    e.stopPropagation();
+    e.preventDefault();
 
     if (amount) {
       setAmount((prev) => {
@@ -68,11 +68,7 @@ const AddEntry = () => {
   };
 
   // TODO: FIX - Decimal conversion with operators in string
-  const handleChangeAmountToDecimal = (
-    e: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    e.stopPropagation();
-
+  const handleChangeAmountToDecimal = () => {
     if (amount) {
       setAmount((prev) => String(Number.parseFloat(String(prev)).toFixed(1)));
     }
@@ -84,8 +80,9 @@ const AddEntry = () => {
   };
 
   // handlers for new entry input value change
-  const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value);
+  };
   const handleSelectCategory = (categoryid: string) => {
     setSelectedCategory(categoryid);
     setIsCategoryModalOpen(false);
@@ -138,7 +135,10 @@ const AddEntry = () => {
   };
 
   // modal for choosing category on new entry
-  const handleOpenCategoryModal = () => setIsCategoryModalOpen(true);
+  const handleOpenCategoryModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsCategoryModalOpen(true);
+  };
   const closeCategoryModal = (
     e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
   ) => {
@@ -147,7 +147,10 @@ const AddEntry = () => {
   };
 
   // modal for choosing account on new entry
-  const handleOpenAccountModal = () => setIsAccountModalOpen(true);
+  const handleOpenAccountModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsAccountModalOpen(true);
+  };
   const closeAccountModal = (
     e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
   ) => {
@@ -209,7 +212,6 @@ const AddEntry = () => {
         <form
           action="POST"
           className="flex flex-col rounded-b-lg bg-blue-primary"
-          onSubmit={handleAddNewEntry}
         >
           <div className="flex items-end px-5 pb-5 pt-9 text-white">
             <span className="w-[0.7em] self-center text-[3em] tracking-tighter">
@@ -235,6 +237,7 @@ const AddEntry = () => {
             <div className="flex basis-1/2 flex-col text-center">
               <button
                 id="account"
+                type="button"
                 className="text-white"
                 onClick={handleOpenAccountModal}
               >
@@ -250,6 +253,7 @@ const AddEntry = () => {
             </div>
             <div className="flex basis-1/2 flex-col text-center">
               <button
+                type="button"
                 id="category"
                 className="text-white"
                 onClick={handleOpenCategoryModal}
@@ -284,98 +288,121 @@ const AddEntry = () => {
           <div className="grid grid-cols-4 grid-rows-4 place-content-around bg-white px-5 text-center text-2xl font-light text-gray-text-2">
             {/* <div className="grid-rows-subgrid row-span-3 grid grid-rows-5"> */}
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "1")}
             >
               1
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "2")}
             >
               2
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "3")}
             >
               3
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "4")}
             >
               4
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "5")}
             >
               5
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "6")}
             >
               6
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "7")}
             >
               7
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "8")}
             >
               8
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "9")}
             >
               9
             </button>
-            <button className="p-4" onClick={handleChangeAmountToDecimal}>
+            <button
+              type="button"
+              className="p-4"
+              onClick={handleChangeAmountToDecimal}
+            >
               .
             </button>
             <button
+              type="button"
               className="p-4"
               onClick={(e) => handleChangeAmountViaCalculator(e, "0")}
             >
               0
             </button>
-            <button className="p-4" onClick={handleDeleteAmountViaCalculator}>
+            <button
+              type="button"
+              className="p-4"
+              onClick={handleDeleteAmountViaCalculator}
+            >
               {"<"}
             </button>
             {/* </div> */}
             <div className="grid-rows-subgrid col-span-1 col-end-5 row-span-4 row-start-1 grid grid-rows-5">
               <button
+                type="button"
                 className="bg-gray-text-1 p-2"
                 onClick={(e) => handleAmountOperation(e, "+")}
               >
                 +
               </button>
               <button
+                type="button"
                 className="bg-gray-text-1 p-2"
                 onClick={(e) => handleAmountOperation(e, "-")}
               >
                 -
               </button>
               <button
+                type="button"
                 className="bg-gray-text-1 p-2"
                 onClick={(e) => handleAmountOperation(e, "/")}
               >
                 /
               </button>
               <button
+                type="button"
                 className="bg-gray-text-1 p-2"
                 onClick={(e) => handleAmountOperation(e, "*")}
               >
                 *
               </button>
               <button
+                type="button"
                 className="bg-gray-text-1 p-2"
                 onClick={(e) => handleAmountOperation(e, "=")}
               >
