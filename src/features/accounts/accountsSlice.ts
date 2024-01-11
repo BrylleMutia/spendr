@@ -149,12 +149,12 @@ const accountsSlice = createSlice({
     ) => {
       const { accountId, amount, purpose } = action.payload;
 
-      if (action.payload.accountId) {
-        let accountToUpdate = state.accounts.find(
+      if (accountId) {
+        const accountToUpdate = state.accounts.find(
           (account) => account.id === accountId,
         );
 
-        if (accountToUpdate?.amount && purpose) {
+        if (accountToUpdate) {
           accountToUpdate.amount += aggregateAmountByPurpose(purpose, amount);
 
           state.accounts = [
