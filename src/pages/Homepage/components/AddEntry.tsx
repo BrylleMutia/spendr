@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { IoAdd } from "react-icons/io5";
 import Modal from "../../../components/Modal";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -10,6 +10,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import CategoryModal from "./CategoryModal";
 import AccountModal from "./AccountModal";
+import Snackbar, { CountdownHandle } from "../../../components/Snackbar";
 
 const AddEntry = () => {
   const [amount, setAmount] = useState<string | undefined>(undefined);
@@ -25,6 +26,8 @@ const AddEntry = () => {
   const { categories } = useAppSelector((state) => state.categories);
 
   const dispatch = useAppDispatch();
+
+  const snackbarRef = useRef<CountdownHandle>(null);
 
   const handleChangeAmountViaCalculator = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -132,7 +135,9 @@ const AddEntry = () => {
       setAmount(undefined);
       setNote("");
 
-      console.log("add new entry triggered");
+      if (snackbarRef.current) {
+        snackbarRef.current.show();
+      }
     }
   };
 
@@ -442,6 +447,8 @@ const AddEntry = () => {
         closeModal={closeAccountModal}
         handleSelectAccount={handleSelectAccount}
       />
+
+      <Snackbar ref={snackbarRef} message="New entry added!" type="success" />
     </button>
   );
 };
