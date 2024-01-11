@@ -32,22 +32,20 @@ const AddEntry = () => {
   ) => {
     e.preventDefault();
 
-    if (amount) {
-      setAmount((prev) => {
-        if (prev) {
-          // for handling decimal values
-          const prev_split = prev.split(".");
+    setAmount((prev) => {
+      if (prev) {
+        // for handling decimal values
+        const prev_split = prev.split(".");
 
-          if (prev_split?.length > 1) {
-            if (prev_split[1] === "0") {
-              return `${prev_split[0]}.${value}`;
-            } else return `${prev}${value}`;
+        if (prev_split?.length > 1) {
+          if (prev_split[1] === "0") {
+            return `${prev_split[0]}.${value}`;
           } else return `${prev}${value}`;
-        }
-      });
-    } else {
-      return setAmount(value);
-    }
+        } else return `${prev}${value}`;
+      } else {
+        return value;
+      }
+    });
   };
   const handleAmountOperation = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -59,9 +57,13 @@ const AddEntry = () => {
       setAmount((prev) => {
         if (prev) {
           // execute operation string, otherwise add operator to string
-          if (operator === "=") return String(Math.abs(eval(prev)));
+          try {
+            if (operator === "=") return String(Math.abs(eval(prev)));
 
-          return `${prev}${operator}`;
+            return `${prev}${operator}`;
+          } catch {
+            return `${prev}`;
+          }
         }
       });
     }
@@ -168,7 +170,6 @@ const AddEntry = () => {
 
   // TODO: NEXT - Enhance design on category and account modal / Close modal when clicked outside
   // TODO: NEXT - Add toast notifications for new entry, etc.
-  // TODO: NEXT - Fix event propagation when selected account or category then input amount causes modal close
   // TODO: Implement transfer
   // TODO: Improved category UI
 
