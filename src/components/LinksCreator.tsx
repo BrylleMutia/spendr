@@ -8,6 +8,7 @@ import { firebaseAuth } from "../api/fireStore";
 import { useAppDispatch } from "../app/hooks";
 import { logoutUser } from "../features/users/usersSlice";
 import { clearEntries } from "../features/entries/entriesSlice";
+import { RiLogoutCircleLine } from "react-icons/ri";
 
 type LinkType = {
   text: string;
@@ -49,7 +50,7 @@ export const LinksCreator = () => {
     },
     {
       text: "Logout",
-      icon: <SlList />,
+      icon: <RiLogoutCircleLine />,
       hasFunction: handleLogOut,
     },
   ];
