@@ -28,18 +28,24 @@ const CategoryModal = ({
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} hideCloseButton={true}>
+      <h3 className="px-3 pt-2 text-center text-lg font-bold text-blue-secondary">
+        Category
+      </h3>
       <div className="flex w-[15em] flex-col p-4">
         {categories.map((category) => (
           <button
-            className="border-1 border border-gray-text-1 py-2"
+            className="border-1 border border-gray-text-1 py-2 transition-all duration-200 hover:bg-blue-primary"
             value={category.id}
             onClick={() => handleSelectCategory(category.id)}
           >
             {category.name}
           </button>
         ))}
-        <button onClick={handleOpenNewCategoryModal} className="btn-accent mt-2">
-          Add new category
+        <button
+          onClick={handleOpenNewCategoryModal}
+          className="btn-accent mt-2"
+        >
+          New
         </button>
         <AddCategory
           isOpen={isAddCategoryModalOpen}

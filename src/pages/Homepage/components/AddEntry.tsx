@@ -178,7 +178,7 @@ const AddEntry = () => {
     setIsAddEntryModalOpen(false);
   };
 
-  // TODO: NEXT - Enhance design on category and account modal / Close modal when clicked outside
+  // TODO: NEXT - Close modal when clicked outside
   // TODO: Implement transfer
   // TODO: Improved category UI
 

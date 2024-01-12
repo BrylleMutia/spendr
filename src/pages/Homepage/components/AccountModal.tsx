@@ -18,10 +18,11 @@ const AccountModal = ({
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} hideCloseButton={true}>
+      <h3 className="text-lg font-bold text-blue-secondary pt-2 px-3 text-center">Account</h3>
       <div className="flex w-[15em] flex-col p-4">
         {accounts.map((account) => (
           <button
-            className="border-1 border border-gray-text-1 py-2"
+            className="border-1 border border-gray-text-1 py-2 transition-all duration-200 hover:bg-blue-primary"
             value={account.id}
             onClick={() => handleSelectAccount(account.id)}
           >
