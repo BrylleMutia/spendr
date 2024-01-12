@@ -28,6 +28,7 @@ const AddEntry = () => {
   const dispatch = useAppDispatch();
 
   const snackbarRef = useRef<CountdownHandle>(null);
+  const failSnackbarRef = useRef<CountdownHandle>(null);
 
   const handleChangeAmountViaCalculator = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -138,6 +139,10 @@ const AddEntry = () => {
       if (snackbarRef.current) {
         snackbarRef.current.show();
       }
+    } else {
+      if (failSnackbarRef.current) {
+        failSnackbarRef.current.show();
+      }
     }
   };
 
@@ -174,7 +179,6 @@ const AddEntry = () => {
   };
 
   // TODO: NEXT - Enhance design on category and account modal / Close modal when clicked outside
-  // TODO: NEXT - Add toast notifications for new entry, etc.
   // TODO: Implement transfer
   // TODO: Improved category UI
 
@@ -449,6 +453,11 @@ const AddEntry = () => {
       />
 
       <Snackbar ref={snackbarRef} message="New entry added!" type="success" />
+      <Snackbar
+        ref={failSnackbarRef}
+        message="Please provide required entry details."
+        type="error"
+      />
     </button>
   );
 };

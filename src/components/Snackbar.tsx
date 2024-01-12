@@ -1,4 +1,7 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
+import { createPortal } from "react-dom";
+import { MdDone } from "react-icons/md";
+import { VscError } from "react-icons/vsc";
 
 export type CountdownHandle = {
   show: () => void;
@@ -22,9 +25,9 @@ const Snackbar = forwardRef<CountdownHandle, SnackbarProps>(
       },
     }));
 
-    return (
+    return createPortal(
       <div
-        className="snackbar"
+        className="snackbar z-50 shadow-lg"
         id={showSnackbar ? "show" : "hide"}
         style={{
           backgroundColor: type === "success" ? "#00F593" : "#FF0033",
@@ -32,10 +35,11 @@ const Snackbar = forwardRef<CountdownHandle, SnackbarProps>(
         }}
       >
         <div className="symbol">
-          {type === "success" ? <h1>&#x2713;</h1> : <h1>&#x2613;</h1>}
+          {type === "success" ? <MdDone /> : <VscError />}
         </div>
         <div className="message">{message}</div>
-      </div>
+      </div>,
+      document.getElementById("modal")!,
     );
   },
 );

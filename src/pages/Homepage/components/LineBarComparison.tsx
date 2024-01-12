@@ -24,7 +24,7 @@ const LineBarComparison = ({
       <div className="relative mb-2 w-full">
         <div className="h-[1em] w-full rounded bg-prev-month"></div>
         <div
-          className="absolute top-0 z-[2] h-[1em] max-w-[100%] rounded bg-blue-accent"
+          className="absolute top-0 z-[0] h-[1em] max-w-[100%] rounded bg-blue-accent"
           style={{ width: `${roundedPercentage}%` }}
         ></div>
       </div>
