@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Modal from "../../../components/Modal";
 import AddCategory from "./AddCategory";
 
 import { useAppSelector } from "../../../app/hooks";
-
 type CategoryModalProps = {
   isOpen: boolean;
   closeModal: () => void;
@@ -18,10 +17,19 @@ const CategoryModal = ({
   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
   const { categories } = useAppSelector((state) => state.categories);
 
-  const handleOpenNewCategoryModal = () => setIsAddCategoryModalOpen(true);
-  const closeAddCategoryModal = () => {
+  const handleOpenNewCategoryModal = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.stopPropagation();
+    setIsAddCategoryModalOpen(true);
+  };
+  const closeAddCategoryModal = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
+    e.stopPropagation();
     setIsAddCategoryModalOpen(false);
   };
+  const handleCloseModal = () => setIsAddCategoryModalOpen(false);
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} hideCloseButton={true}>
@@ -44,9 +52,11 @@ const CategoryModal = ({
         >
           New
         </button>
+
         <AddCategory
           isOpen={isAddCategoryModalOpen}
-          handleCloseModal={closeAddCategoryModal}
+          handleCloseModal={handleCloseModal}
+          closeModal={closeAddCategoryModal}
         />
       </div>
     </Modal>

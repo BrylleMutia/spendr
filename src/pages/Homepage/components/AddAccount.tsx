@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { IoMdAddCircle } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { addNewAccount } from "../../../features/accounts/accountsSlice";
 
 import Modal from "../../../components/Modal";
+import Snackbar, { CountdownHandle } from "../../../components/Snackbar";
 
 type AddAccountProps = {
   text: string;
@@ -15,6 +16,9 @@ const AddAccount = ({ text }: AddAccountProps) => {
     undefined,
   );
   const [isAddAcountModalOpen, setIsAddAccountModalOpen] = useState(false);
+
+  const successSnackbarRef = useRef<CountdownHandle>(null);
+  const failSnackbarRef = useRef<CountdownHandle>(null);
 
   const { id } = useAppSelector((state) => state.users.user);
   const dispatch = useAppDispatch();
@@ -41,17 +45,33 @@ const AddAccount = ({ text }: AddAccountProps) => {
       setIsAddAccountModalOpen(false);
       setAccountName("");
       setInitialAmount(0);
+      closeAddAccountModal(e);
+
+      if (successSnackbarRef.current) {
+        successSnackbarRef.current.show();
+      }
+    } else {
+      if (failSnackbarRef.current) {
+        failSnackbarRef.current.show();
+      }
     }
   };
 
-  const openAddAccountModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const openAddAccountModal = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
     e.stopPropagation(); // stop event propagation to parent from modal portal component
     setIsAddAccountModalOpen(true);
   };
 
-  const closeAddAccountModal = () => {
+  const closeAddAccountModal = (
+    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
     setIsAddAccountModalOpen(false);
   };
+  const handleCloseAddAccountModal = () => setIsAddAccountModalOpen(false);
 
   return (
     <button
@@ -61,12 +81,15 @@ const AddAccount = ({ text }: AddAccountProps) => {
     >
       <span className="text-left leading-4">{text}</span>{" "}
       <IoMdAddCircle style={{ width: "2em", height: "2em" }} />
-      <Modal isOpen={isAddAcountModalOpen} closeModal={closeAddAccountModal}>
-        <h3 className="font-semibold">Add new account</h3>
+      <Modal
+        isOpen={isAddAcountModalOpen}
+        closeModal={handleCloseAddAccountModal}
+      >
+        <h3 className="pl-3 pt-3 font-semibold">Add new account</h3>
 
         <form
           action="POST"
-          className="mt-5 flex flex-col gap-2"
+          className="mt-5 flex flex-col gap-2 p-3"
           onSubmit={handleAddNewAccount}
         >
           <label htmlFor="account-name" hidden>
@@ -89,7 +112,7 @@ const AddAccount = ({ text }: AddAccountProps) => {
             name="initial-amount"
             id="initial-amount"
             className="input-text-primary"
-            placeholder="Initial Amount"
+            placeholder="Initial Amount (optional)"
             value={initialAmount}
             onChange={handleChangeInitialAmount}
           />
@@ -99,6 +122,16 @@ const AddAccount = ({ text }: AddAccountProps) => {
           </button>
         </form>
       </Modal>
+      <Snackbar
+        message="Account added!"
+        type="success"
+        ref={successSnackbarRef}
+      />
+      <Snackbar
+        ref={failSnackbarRef}
+        message="Please provide required details."
+        type="error"
+      />
     </button>
   );
 };

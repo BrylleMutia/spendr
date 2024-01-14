@@ -16,8 +16,14 @@ const AccountModal = ({
   const { accounts } = useAppSelector((state) => state.accounts);
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} hideCloseButton={true}>
-      <h3 className="text-lg font-bold text-blue-secondary pt-2 px-3 text-center">Account</h3>
+    <Modal
+      isOpen={isOpen}
+      closeModal={closeModal}
+      hideCloseButton={true}
+    >
+      <h3 className="px-3 pt-2 text-center text-lg font-bold text-blue-secondary">
+        Account
+      </h3>
       <div className="flex w-[15em] flex-col p-4">
         {accounts.map((account) => (
           <button
