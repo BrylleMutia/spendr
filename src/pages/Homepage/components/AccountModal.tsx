@@ -1,11 +1,10 @@
-import React from "react";
 import Modal from "../../../components/Modal";
 
 import { useAppSelector } from "../../../app/hooks";
 
 type AccountModalProps = {
   isOpen: boolean;
-  closeModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  closeModal: () => void;
   handleSelectAccount: (accountid: string) => void;
 };
 

@@ -151,10 +151,7 @@ const AddEntry = () => {
     e.stopPropagation();
     setIsCategoryModalOpen(true);
   };
-  const closeCategoryModal = (
-    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
-  ) => {
-    e.stopPropagation(); // stop event propagation to parent from modal portal component
+  const closeCategoryModal = () => {
     setIsCategoryModalOpen(false);
   };
 
@@ -163,10 +160,7 @@ const AddEntry = () => {
     e.stopPropagation();
     setIsAccountModalOpen(true);
   };
-  const closeAccountModal = (
-    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
-  ) => {
-    e.stopPropagation(); // stop event propagation to parent from modal portal component
+  const closeAccountModal = () => {
     setIsAccountModalOpen(false);
   };
 
@@ -174,9 +168,11 @@ const AddEntry = () => {
   const closeAddEntryModal = (
     e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
   ) => {
-    e.stopPropagation(); // stop event propagation to parent from modal portal component
+    e.stopPropagation();
+    e.preventDefault();
     setIsAddEntryModalOpen(false);
   };
+  const handleCloseAddEntryModal = () => setIsAddEntryModalOpen(false);
 
   // TODO: NEXT - Close modal when clicked outside
   // TODO: Implement transfer
@@ -193,7 +189,7 @@ const AddEntry = () => {
         />
       </span>
 
-      <Modal isOpen={isAddEntryModalOpen} closeModal={closeAddEntryModal}>
+      <Modal isOpen={isAddEntryModalOpen} closeModal={handleCloseAddEntryModal}>
         <div className="w-full px-4 py-3">
           <h3 className="text-sm font-semibold">Add entry</h3>
         </div>

@@ -6,7 +6,7 @@ import { useAppSelector } from "../../../app/hooks";
 
 type CategoryModalProps = {
   isOpen: boolean;
-  closeModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  closeModal: () => void;
   handleSelectCategory: (catgegoryid: string) => void;
 };
 
@@ -19,10 +19,7 @@ const CategoryModal = ({
   const { categories } = useAppSelector((state) => state.categories);
 
   const handleOpenNewCategoryModal = () => setIsAddCategoryModalOpen(true);
-  const closeAddCategoryModal = (
-    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
-  ) => {
-    e.stopPropagation(); // stop event propagation to parent from modal portal component
+  const closeAddCategoryModal = () => {
     setIsAddCategoryModalOpen(false);
   };
 

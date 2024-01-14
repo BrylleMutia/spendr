@@ -49,8 +49,7 @@ const AddAccount = ({ text }: AddAccountProps) => {
     setIsAddAccountModalOpen(true);
   };
 
-  const closeAddAccountModal = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // stop event propagation to parent from modal portal component
+  const closeAddAccountModal = () => {
     setIsAddAccountModalOpen(false);
   };
 

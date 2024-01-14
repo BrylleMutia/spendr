@@ -6,9 +6,7 @@ import { addNewCategory } from "../../../features/categories/categoriesSlice";
 
 type AddCategoryProps = {
   isOpen: boolean;
-  handleCloseModal: (
-    e: React.FormEvent<HTMLButtonElement | HTMLFormElement>,
-  ) => void;
+  handleCloseModal: () => void;
 };
 
 const AddCategory = ({ isOpen, handleCloseModal }: AddCategoryProps) => {
@@ -36,7 +34,7 @@ const AddCategory = ({ isOpen, handleCloseModal }: AddCategoryProps) => {
         }),
       );
 
-      handleCloseModal(e);
+      handleCloseModal();
     }
   };
 
@@ -45,7 +43,7 @@ const AddCategory = ({ isOpen, handleCloseModal }: AddCategoryProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} closeModal={(e) => handleCloseModal(e)}>
+    <Modal isOpen={isOpen} closeModal={() => handleCloseModal()}>
       <h3 className="font-semibold">Add new category</h3>
 
       <form
