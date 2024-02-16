@@ -2,6 +2,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
 import { firebaseAuth } from "../../api/fireStore";
 import { useNavigate } from "react-router-dom";
+import AuthContainer from "../../components/AuthContainer";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
@@ -28,8 +29,8 @@ const PasswordReset = () => {
   };
 
   return (
-    <div className="flex h-[100vh] items-center">
-      <div className="mx-10">
+    <AuthContainer>
+      <div>
         <h1 className="mb-2 text-4xl font-extrabold text-blue-secondary">
           Spendr
         </h1>
@@ -52,12 +53,16 @@ const PasswordReset = () => {
             Email
           </label>
 
-          <button type="submit" className="btn-primary mt-5" onClick={handleReset}>
+          <button
+            type="submit"
+            className="btn-primary mt-5"
+            onClick={handleReset}
+          >
             Reset Password
           </button>
         </form>
       </div>
-    </div>
+    </AuthContainer>
   );
 };
 

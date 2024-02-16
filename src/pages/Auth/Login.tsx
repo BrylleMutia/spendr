@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { BiHide, BiShow } from "react-icons/bi";
+import AuthContainer from "../../components/AuthContainer";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -128,8 +129,8 @@ const Login = () => {
     };
 
   return (
-    <div className="flex h-[100vh] items-center">
-      <div className="mx-10">
+    <AuthContainer>
+      <div>
         <h1 className="mb-2 text-4xl font-extrabold text-blue-secondary">
           Spendr
         </h1>
@@ -254,7 +255,7 @@ const Login = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </AuthContainer>
   );
 };
 

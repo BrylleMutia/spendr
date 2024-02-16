@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { User } from "../../features/users/userTypes";
 import { saveUser, userSignUp } from "../../features/users/usersSlice";
 import { BiHide, BiShow } from "react-icons/bi";
+import AuthContainer from "../../components/AuthContainer";
 
 const Register = () => {
   const [displayName, setDIsplayName] = useState("");
@@ -71,15 +72,14 @@ const Register = () => {
       });
   };
 
-  
   // TODO: Low Prio - Implement password strength indicator
   return (
-    <div className="flex h-[100vh] items-center">
-      <div className="mx-10">
+    <AuthContainer>
+      <div>
         <h1 className="mb-2 text-4xl font-extrabold text-blue-secondary">
           Spendr
         </h1>
-        <p className="mb-10 text-sm text-gray-text-2">
+        <p className="mb-[7em] text-sm text-gray-text-2">
           Smart Spending, Smart Saving: Achieve Financial Freedom Effortlessly
           with Spendr.
         </p>
@@ -165,7 +165,7 @@ const Register = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </AuthContainer>
   );
 };
 
