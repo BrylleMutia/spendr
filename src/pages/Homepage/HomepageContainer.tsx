@@ -33,6 +33,7 @@ const HomepageContainer = () => {
 
   // props from router outlet component
   const [isSidebarOpen, handleSidebarOpen] = useSidebar();
+  console.log(isSidebarOpen);
 
   const getTotalsPercentage = () => {
     // if no records from prev month, return current total as percentage for current
