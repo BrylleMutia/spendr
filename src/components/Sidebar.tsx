@@ -12,7 +12,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
 
   return (
     <nav
-      className={`max-sm:sidebar-toggle bg-blue-primary w-[18em] ${
+      className={`max-sm:sidebar-toggle w-[18em] bg-blue-primary ${
         isOpen ? "max-sm:translate-x-[700px]" : "max-sm:translate-x-full"
       } flex-col sm:flex`}
     >
@@ -21,10 +21,10 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
           src={
             photoURL
               ? photoURL
-              : "https://i.ibb.co/YRsRb90/handy-game-icon-1.png"
+              : "https://i.ibb.co/qrH1nJk/firefox-s-Hob-CL6-Sx-Q.png"
           }
           alt="profile"
-          className="h-[50px] w-[50px] rounded-full border-[1px] border-blue-accent bg-white p-[1px] mr-2"
+          className="mr-2 h-[50px] w-[50px] rounded-full border-[1px] border-blue-accent bg-white p-[1px]"
         />
         <div className="flex flex-col">
           <h3 className="text-lg font-semibold">{name}</h3>
