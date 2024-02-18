@@ -35,7 +35,7 @@ export const LinksCreator = () => {
   const links: LinkType[] = [
     {
       text: "Home",
-      link: "/home",
+      link: "/",
       icon: <AiFillHome />,
     },
     {

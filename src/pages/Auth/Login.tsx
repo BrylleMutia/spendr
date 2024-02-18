@@ -44,7 +44,7 @@ const Login = () => {
         const user = userCredential.user;
         // console.log("Singed in user: ", user);
 
-        if (user.refreshToken) navigate("/home");
+        if (user.refreshToken) navigate("/");
       })
       .catch((error) => {
         setError(error.message);
@@ -75,7 +75,7 @@ const Login = () => {
           // IdP data available using getAdditionalUserInfo(result)
           // ...
 
-          if (token) navigate("/home");
+          if (token) navigate("/");
         }
       })
       .catch((error) => {
