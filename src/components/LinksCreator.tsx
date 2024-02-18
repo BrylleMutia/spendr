@@ -61,7 +61,7 @@ export const LinksCreator = () => {
         <Link
           key={index}
           to={link.link ? link.link : ""}
-          onClick={handleLogOut}
+          onClick={link.hasFunction}
           className="flex items-center gap-5 px-7 py-4 hover:bg-blue-accent"
         >
           {link.icon}

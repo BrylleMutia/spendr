@@ -60,7 +60,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         {/* Private routes for auth check, check for access token on Layout */}
-        <Route index element={<HomepageContainer />} />
+        <Route path="home" element={<HomepageContainer />} />
       </Route>
 
       <Route path="/auth" element={<Login />} />

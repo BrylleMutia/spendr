@@ -57,7 +57,7 @@ const Register = () => {
           dispatch(saveUser(updatedUserInfo));
         }
 
-        if (user.refreshToken) navigate("/");
+        if (user.refreshToken) navigate("/home");
       })
       .catch((error) => {
         setError(error.message);

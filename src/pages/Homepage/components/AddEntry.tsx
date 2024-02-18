@@ -180,7 +180,7 @@ const AddEntry = () => {
 
   return (
     <button
-      className="fixed bottom-10 right-7 h-[3.5em] w-[3.5em] rounded-full bg-blue-accent"
+      className="fixed bottom-10 right-7 h-[3.5em] w-[3.5em] rounded-full bg-blue-accent shadow-md md:mb-3 md:mr-5"
       onClick={openAddEntryModal}
     >
       <span className="flex h-full w-full items-center justify-center">
