@@ -6,15 +6,19 @@ import { IoMdSettings } from "react-icons/io";
 import Account from "./components/Account";
 import AddAccount from "./components/AddAccount";
 import WalletGauge from "./components/WalletGauge";
-import UsersPage from "../UsersPage";
 import LineBarComparison from "./components/LineBarComparison";
 import ComparisonLegend from "./components/ComparisonLegend";
 import ArrowSelector from "./components/ArrowSelector";
-import { updateMonthInView, updateMonthInViewToCurrDate } from "../../features/entries/entriesSlice";
+import {
+  updateMonthInView,
+  updateMonthInViewToCurrDate,
+} from "../../features/entries/entriesSlice";
 import Record from "./components/Record";
 import moment from "moment";
 import AddEntry from "./components/AddEntry";
 import SkeletonLoader from "../../components/SkeletonLoader";
+import { IoMenu } from "react-icons/io5";
+import { useSidebar } from "../../components/Layout";
 
 const HomepageContainer = () => {
   const accounts = useAppSelector((state) => state.accounts.accounts);
@@ -26,6 +30,9 @@ const HomepageContainer = () => {
     expenseCompPercentage: 0,
     incomeCompPercentage: 0,
   });
+
+  // props from router outlet component
+  const [isSidebarOpen, handleSidebarOpen] = useSidebar();
 
   const getTotalsPercentage = () => {
     // if no records from prev month, return current total as percentage for current
@@ -63,7 +70,15 @@ const HomepageContainer = () => {
   }, [dispatch, totals]);
 
   return (
-    <main className="bg-gray-background py-5">
+    <main className="px-1 py-5 md:px-5">
+      <div className="mb-5 ml-5 flex items-center gap-5">
+        <IoMenu
+          className="cursor-pointer text-lg"
+          onClick={handleSidebarOpen}
+        />
+        <h3 className="text-lg font-bold">Home</h3>
+      </div>
+
       <Card className="mx-3 p-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold">Accounts</h3>
@@ -150,8 +165,6 @@ const HomepageContainer = () => {
       </Card>
 
       <AddEntry />
-
-      <UsersPage />
     </main>
   );
 };

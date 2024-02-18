@@ -56,18 +56,18 @@ export const LinksCreator = () => {
   ];
 
   return (
-    <>
+    <div className="pl-5">
       {links.map((link, index) => (
         <Link
           key={index}
           to={link.link ? link.link : ""}
           onClick={handleLogOut}
-          className="flex items-center gap-5 px-7 py-4 hover:bg-gray-text-1"
+          className="flex items-center gap-5 px-7 py-4 hover:bg-blue-accent"
         >
           {link.icon}
           {link.text}
         </Link>
       ))}
-    </>
+    </div>
   );
 };

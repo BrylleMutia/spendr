@@ -75,7 +75,7 @@ const AddAccount = ({ text }: AddAccountProps) => {
 
   return (
     <button
-      className="flex items-center rounded-md border-2 border-blue-accent px-1 py-1 text-[0.7rem] font-bold text-blue-accent"
+      className="flex items-center justify-center rounded-md border-2 border-blue-accent px-1 py-1 text-[0.7rem] font-bold text-blue-accent"
       style={{ flexBasis: "calc(33.333333% - 0.8em)" }}
       onClick={openAddAccountModal}
     >
