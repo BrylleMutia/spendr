@@ -39,6 +39,7 @@ const CategoryModal = ({
       <div className="flex w-[15em] flex-col p-4">
         {categories.map((category) => (
           <button
+            key={category.id}
             className="border-1 border border-gray-text-1 py-2 transition-all duration-200 hover:bg-blue-primary"
             value={category.id}
             onClick={() => handleSelectCategory(category.id)}
